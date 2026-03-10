@@ -10,7 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .select("username, updated_at")
         .eq("onboarded", true);
 
-    const baseUrl = "https://linklane.app";
+    const baseUrl = "https://linklane.in";
 
     const profileUrls = (profiles || []).map((profile) => ({
         url: `${baseUrl}/${profile.username}`,

@@ -7,7 +7,7 @@ export default function HowItWorks() {
     const steps = [
         {
             title: "Claim your page",
-            domain: "linklane.app/username",
+            domain: "linklane.in/username",
             icon: <Link2 className="h-6 w-6 text-primary" />,
             desc: "Secure your unique handle in seconds."
         },

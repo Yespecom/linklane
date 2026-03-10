@@ -156,39 +156,59 @@ export default function Home() {
                   className="inline-block"
                 >
                   <motion.div
-                    className="w-64 md:w-80 p-5 md:p-8 bg-white border border-slate-100 rounded-[2rem] md:rounded-[3rem] shadow-sm hover:shadow-2xl hover:border-transparent transition-all hover:-translate-y-2 cursor-pointer group h-full"
+                    className="relative w-72 md:w-[26rem] p-6 md:p-8 bg-white border border-slate-100 rounded-[2rem] md:rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgb(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-2 cursor-pointer group h-full flex flex-col overflow-hidden text-left"
                   >
-                    <div className="flex items-center gap-2 md:gap-4 mb-4 md:mb-6">
-                      <div className="h-12 md:h-16 w-12 md:w-16 rounded-xl md:rounded-2xl bg-slate-50 overflow-hidden border border-slate-100 shadow-inner">
-                        <img src={profile.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.username}`} alt={profile.display_name} className="w-full h-full object-cover" />
-                      </div>
-                      <div>
-                        <h4 className="text-sm md:text-lg font-black tracking-tight text-slate-900">{profile.display_name}</h4>
-                        <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">@{profile.username}</p>
-                      </div>
-                    </div>
+                    {/* Background Accent */}
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50/50 rounded-full blur-3xl -mr-10 -mt-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
-                    <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
-                      <div className="flex items-center gap-2">
-                        <div className="h-1 w-1 md:h-1.5 md:w-1.5 rounded-full bg-blue-500 animate-pulse" />
-                        <p className="text-[8px] md:text-[9px] font-black uppercase tracking-widest text-slate-400">Profile Verified</p>
-                      </div>
-                      <div className="h-1 md:h-1.5 w-full bg-slate-50 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-600/10 w-3/4" />
-                      </div>
-                    </div>
+                    <div className="flex flex-col flex-1 relative z-10">
+                      <div className="flex items-start justify-between mb-8">
+                        <div className="relative">
+                          {/* Inner glow effect on hover */}
+                          <div className="absolute -inset-3 bg-gradient-to-tr from-blue-100 to-indigo-50 rounded-[1.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                          <div className="relative h-16 w-16 md:h-20 md:w-20 rounded-[1.2rem] md:rounded-[1.4rem] bg-white border border-slate-100/50 shadow-sm p-1 group-hover:scale-105 transition-transform duration-500">
+                            <img src={profile.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.username}`} alt={profile.display_name} className="w-full h-full object-cover rounded-[1rem] md:rounded-[1.1rem] bg-slate-50" />
+                          </div>
+                        </div>
 
-                    <div className="flex items-center justify-between pt-4 md:pt-6 border-t border-slate-50">
-                      <div className="flex items-center gap-1.5">
-                        <Star className="h-3 md:h-4 w-3 md:w-4 fill-amber-400 text-amber-400" />
-                        <span className="text-[10px] md:text-xs font-black text-slate-900">{profile.rating || "5.0"}</span>
-                        <span className="text-[9px] md:text-[10px] font-bold text-slate-300">({profile.review_count || (Math.floor(Math.random() * 50) + 1)})</span>
+                        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-900 rounded-full border border-slate-100 group-hover:bg-amber-50 group-hover:border-amber-100 group-hover:text-amber-900 transition-colors">
+                          <Star className="h-3 md:h-3.5 w-3 md:w-3.5 fill-amber-400 text-amber-500" />
+                          <span className="text-[10px] md:text-xs font-black">{profile.rating || "5.0"}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2 text-blue-600 font-black text-[9px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                        View Page <ChevronRight className="h-3 w-3" />
+
+                      <div className="mb-6 flex-1">
+                        <h4 className="text-xl md:text-2xl font-black tracking-tight text-slate-900 mb-2 truncate group-hover:text-blue-600 transition-colors">{profile.display_name}</h4>
+                        <div className="flex items-center gap-2">
+                          <p className="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] truncate">
+                            linklane.in/{profile.username}
+                          </p>
+                        </div>
                       </div>
-                      <div className="h-8 md:h-10 w-8 md:w-10 rounded-xl md:rounded-2xl bg-slate-50 text-slate-950 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
-                        <ArrowUpRight className="h-3 md:h-4 w-3 md:w-4" />
+
+                      <div className="flex flex-col gap-3 md:gap-4 mb-8">
+                        <div className="flex items-center justify-between text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                          <span>Profile Strength</span>
+                          <span className="text-blue-600">Elite</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-slate-50 rounded-full overflow-hidden">
+                          <motion.div
+                            initial={{ width: "0%" }}
+                            whileInView={{ width: "85%" }}
+                            transition={{ duration: 1.5, ease: "easeOut" }}
+                            className="h-full bg-blue-600 rounded-full"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-5 md:pt-6 border-t border-slate-100 mt-auto">
+                        <div className="flex flex-col gap-1">
+                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Community Voice</span>
+                          <span className="text-[11px] md:text-xs font-black text-slate-900">{profile.review_count || (Math.floor(Math.random() * 50) + 1)} Reviews</span>
+                        </div>
+                        <div className="h-10 w-10 md:h-12 md:w-12 rounded-2xl bg-slate-50 text-slate-900 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:-translate-y-1 transform group-hover:rotate-12 shrink-0">
+                          <ArrowUpRight className="h-4 w-4 md:h-5 md:w-5" />
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -305,7 +325,7 @@ export default function Home() {
 
                 <div className="space-y-8">
                   {[
-                    { label: "Direct Support", icon: Send, value: "hello@linklane.app" }
+                    { label: "Direct Support", icon: Send, value: "hello@linklane.in" }
                   ].map((item) => (
                     <div key={item.label} className="flex items-center gap-6 group/item cursor-pointer">
                       <div className="h-14 w-14 bg-slate-900 border border-slate-800 rounded-2xl flex items-center justify-center text-white group-hover/item:border-blue-500/50 transition-colors">

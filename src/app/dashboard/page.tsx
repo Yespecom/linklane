@@ -78,7 +78,7 @@ export default async function OverviewPage() {
                                     </div>
                                 </div>
                                 <p className="text-sm font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Live at:</p>
-                                <p className="text-xl font-black text-blue-600 tracking-tight">linklane.app/{profile.username}</p>
+                                <p className="text-xl font-black text-blue-600 tracking-tight">linklane.in/{profile.username}</p>
                             </div>
 
                             <div className="mt-12 flex items-center justify-between pt-8 border-t border-slate-50">

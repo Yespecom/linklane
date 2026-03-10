@@ -599,7 +599,7 @@ export default function EditorPage() {
                                                 {profile?.seo_title || `${profile?.display_name} | ${profile?.title || 'Professional'} | Linklane`}
                                             </div>
                                             <div className="text-green-800 text-sm mb-1 truncate">
-                                                https://linklane.app/{profile?.username}
+                                                https://linklane.in/{profile?.username}
                                             </div>
                                             <div className="text-slate-600 text-sm line-clamp-2">
                                                 {profile?.seo_description || `${profile?.display_name} offers professional ${profile?.title || 'expert'} services. Read reviews and discover my work on Linklane.`}

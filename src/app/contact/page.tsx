@@ -33,7 +33,7 @@ export default function ContactPage() {
 
                             <div className="space-y-10">
                                 {[
-                                    { label: "Direct Support", value: "hello@linklane.app", icon: Mail },
+                                    { label: "Direct Support", value: "hello@linklane.in", icon: Mail },
                                 ].map((item) => (
                                     <div key={item.label} className="flex items-center gap-8 group cursor-pointer">
                                         <div className="h-16 w-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center group-hover:bg-blue-600 group-hover:border-blue-500 transition-all group-hover:rotate-6">

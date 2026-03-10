@@ -94,7 +94,7 @@ function SignupContent() {
                             <h1 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">Check your email</h1>
                             <p className="text-slate-500 font-medium mb-8 leading-relaxed">
                                 We've sent a confirmation link to <span className="text-slate-900 font-black">{email}</span>.
-                                Please click it to activate your account and claim <span className="text-blue-600 font-black">linklane.app/{username}</span>.
+                                Please click it to activate your account and claim <span className="text-blue-600 font-black">linklane.in/{username}</span>.
                             </p>
                             <Link href="/login" className="inline-flex items-center justify-center w-full bg-blue-600 text-white rounded-2xl py-4 text-sm font-black shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all">
                                 Go to Login
@@ -109,7 +109,7 @@ function SignupContent() {
                                 {username && (
                                     <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-3 py-1.5 text-xs font-black text-blue-600 mb-4 uppercase tracking-tighter">
                                         <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse" />
-                                        linklane.app/{username} is reserved
+                                        linklane.in/{username} is reserved
                                     </div>
                                 )}
                                 <p className="text-slate-500 font-medium text-sm">

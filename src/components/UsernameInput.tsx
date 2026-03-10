@@ -77,7 +77,7 @@ export default function UsernameInput({ variant = "hero" }: { variant?: "hero" |
             <div className="flex flex-col sm:flex-row items-stretch gap-3">
                 {/* Input area */}
                 <div className="flex-1 flex items-center bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10 transition-all min-h-[64px]">
-                    <span className="text-slate-400 font-bold text-base select-none mr-1.5 pt-0.5">linklane.app/</span>
+                    <span className="text-slate-400 font-bold text-base select-none mr-1.5 pt-0.5">linklane.in/</span>
                     <input
                         type="text"
                         value={username}

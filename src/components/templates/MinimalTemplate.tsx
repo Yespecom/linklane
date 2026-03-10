@@ -177,7 +177,7 @@ export default function MinimalTemplate({ profile, services, products, links, re
                                     <div className="flex gap-4">
                                         <button
                                             onClick={() => {
-                                                navigator.clipboard.writeText(`https://linklane.app/${username}`);
+                                                navigator.clipboard.writeText(`https://linklane.in/${username}`);
                                                 alert("Identity link copied!");
                                             }}
                                             className="flex-1 flex items-center justify-center gap-2 py-4 bg-white border border-slate-100 rounded-2xl text-[9px] font-black uppercase tracking-widest text-slate-400 hover:bg-slate-50 transition-all shadow-sm"
@@ -290,7 +290,7 @@ export default function MinimalTemplate({ profile, services, products, links, re
                             <div className="bg-slate-950 p-10 rounded-[3rem] flex flex-col items-center gap-10 text-center">
                                 <h4 className="text-[9px] font-black uppercase tracking-[0.6em] text-indigo-400">Profile Verify</h4>
                                 <div className="p-3 bg-white rounded-2xl">
-                                    <ProfileQRCode url={`https://linklane.app/${username}`} size={120} />
+                                    <ProfileQRCode url={`https://linklane.in/${username}`} size={120} />
                                 </div>
                                 <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
                                     Scan to authenticate this minimalist profile system
@@ -302,7 +302,7 @@ export default function MinimalTemplate({ profile, services, products, links, re
                 {/* Minimal Footer Branding */}
                 <div className="mt-40 py-32 border-t border-slate-100 flex flex-col items-center gap-12 opacity-30 hover:opacity-100 transition-all">
                     <div className="p-4 bg-white border border-slate-100 rounded-[2rem] shadow-sm">
-                        <ProfileQRCode url={`https://linklane.app/${username}`} size={120} />
+                        <ProfileQRCode url={`https://linklane.in/${username}`} size={120} />
                     </div>
                     <Link href="/" className="flex flex-col items-center gap-4 group">
                         <div className="px-8 py-3 bg-white border border-slate-200 rounded-2xl flex items-center gap-3 transition-all hover:bg-slate-950 hover:text-white hover:border-slate-950 shadow-sm">

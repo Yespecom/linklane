@@ -71,7 +71,7 @@ export default function ReviewsPage() {
     }
 
     const copyReviewLink = () => {
-        const link = `https://linklane.app/${profile?.username}/review`;
+        const link = `https://linklane.in/${profile?.username}/review`;
         navigator.clipboard.writeText(link);
         alert("Review request link copied!");
     };
@@ -123,8 +123,8 @@ export default function ReviewsPage() {
                                             ))}
                                         </div>
                                         <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${review.status === 'approved' ? 'bg-green-50 text-green-600' :
-                                                review.status === 'rejected' ? 'bg-red-50 text-red-600' :
-                                                    'bg-blue-50 text-blue-600'
+                                            review.status === 'rejected' ? 'bg-red-50 text-red-600' :
+                                                'bg-blue-50 text-blue-600'
                                             }`}>
                                             {review.status}
                                         </span>

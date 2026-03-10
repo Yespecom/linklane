@@ -44,7 +44,7 @@ export default function Hero() {
                         >
                             <UsernameInput />
                             <p className="mt-4 text-sm text-slate-500">
-                                Example: <span className="text-primary font-medium">linklane.app/srinithin</span>
+                                Example: <span className="text-primary font-medium">linklane.in/srinithin</span>
                             </p>
                         </motion.div>
 

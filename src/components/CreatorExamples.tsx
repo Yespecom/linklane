@@ -42,7 +42,7 @@ export default function CreatorExamples() {
                                         />
                                         <div>
                                             <h3 className="font-bold text-white transition-colors group-hover:text-primary">{example.name}</h3>
-                                            <p className="text-sm text-slate-500">linklane.app/{example.handle}</p>
+                                            <p className="text-sm text-slate-500">linklane.in/{example.handle}</p>
                                         </div>
                                     </div>
                                     <div className="rounded-full bg-white/5 p-2 text-slate-500 transition-all group-hover:bg-primary group-hover:text-white group-hover:rotate-12">

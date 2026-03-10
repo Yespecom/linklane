@@ -191,7 +191,7 @@ export default function CreatorTemplate({ profile, services, products, links, re
                                     <div className="grid grid-cols-2 gap-4">
                                         <button
                                             onClick={() => {
-                                                navigator.clipboard.writeText(`https://linklane.app/${username}`);
+                                                navigator.clipboard.writeText(`https://linklane.in/${username}`);
                                                 alert("Copied!");
                                             }}
                                             className="flex items-center justify-center gap-2 py-4 bg-white border border-slate-100 rounded-2xl text-[9px] font-black uppercase tracking-widest text-slate-400 hover:bg-slate-50 transition-all shadow-sm"
@@ -308,7 +308,7 @@ export default function CreatorTemplate({ profile, services, products, links, re
                                 <div className="absolute inset-0 bg-gradient-to-br from-rose-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-rose-400 relative z-10">Vault Access</h4>
                                 <div className="p-5 bg-white rounded-[2.5rem] relative z-10 shadow-2xl">
-                                    <ProfileQRCode url={`https://linklane.app/${username}`} size={160} />
+                                    <ProfileQRCode url={`https://linklane.in/${username}`} size={160} />
                                 </div>
                                 <div className="flex flex-col gap-2 relative z-10">
                                     <span className="text-[11px] font-black text-white uppercase tracking-widest underline decoration-rose-500 decoration-4">Scan Profile</span>
@@ -324,7 +324,7 @@ export default function CreatorTemplate({ profile, services, products, links, re
                 {/* Footer */}
                 <div className="flex flex-col items-center gap-12 py-32 border-t border-slate-50 opacity-20 hover:opacity-100 transition-opacity">
                     <div className="p-4 bg-white border border-slate-100 rounded-[2rem] shadow-sm">
-                        <ProfileQRCode url={`https://linklane.app/${username}`} size={120} />
+                        <ProfileQRCode url={`https://linklane.in/${username}`} size={120} />
                     </div>
                     <Link href="/" className="flex items-center gap-3 grayscale group active:scale-95 transition-transform">
                         <div className="px-6 py-2.5 bg-slate-900 rounded-xl flex items-center gap-2.5 shadow-lg group-hover:bg-rose-500 transition-colors">

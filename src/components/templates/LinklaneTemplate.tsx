@@ -37,7 +37,7 @@ ORG:${profile.company || ""}
 ${profile.email ? `EMAIL;TYPE=INTERNET:${profile.email}` : ""}
 ${profile.phone ? `TEL;TYPE=CELL:${profile.phone}` : ""}
 ${profile.location ? `ADR;TYPE=WORK:;;;${profile.location}` : ""}
-URL:https://linklane.app/${username}
+URL:https://linklane.in/${username}
 END:VCARD`;
 
         const blob = new Blob([vcard], { type: 'text/vcard' });
@@ -409,7 +409,7 @@ END:VCARD`;
                 {/* 8. FOOTER */}
                 <footer className="pt-20 pb-12 flex flex-col items-center space-y-8 opacity-40 hover:opacity-100 transition-all duration-700">
                     <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-100">
-                        <ProfileQRCode url={`https://linklane.app/${username}`} size={140} />
+                        <ProfileQRCode url={`https://linklane.in/${username}`} size={140} />
                     </div>
                     <Link href="/" className="flex flex-col items-center gap-4 group">
                         <div className="px-6 py-2.5 bg-white border border-slate-200 rounded-lg flex items-center gap-2 transition-all hover:border-slate-300 shadow-sm">

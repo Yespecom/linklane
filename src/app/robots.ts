@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: '/',
             disallow: '/dashboard/',
         },
-        sitemap: 'https://linklane.app/sitemap.xml',
+        sitemap: 'https://linklane.in/sitemap.xml',
     };
 }

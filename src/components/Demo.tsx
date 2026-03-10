@@ -56,7 +56,7 @@ export default function Demo() {
                                     />
                                     <div>
                                         <p className="text-sm font-bold text-white">Demo Creator</p>
-                                        <p className="text-xs text-primary">linklane.app/demo</p>
+                                        <p className="text-xs text-primary">linklane.in/demo</p>
                                     </div>
                                 </div>
                                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 text-white hover:bg-white/10 cursor-pointer">

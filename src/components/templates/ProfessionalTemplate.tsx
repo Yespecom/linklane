@@ -221,7 +221,7 @@ export default function ProfessionalTemplate({ profile, services, products, link
                                     <div className="flex gap-4">
                                         <button
                                             onClick={() => {
-                                                navigator.clipboard.writeText(`https://linklane.app/${username}`);
+                                                navigator.clipboard.writeText(`https://linklane.in/${username}`);
                                                 alert("Profile link copied!");
                                             }}
                                             className="flex-1 flex items-center justify-center gap-2 py-4 bg-white border border-slate-100 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all shadow-sm"
@@ -365,7 +365,7 @@ export default function ProfessionalTemplate({ profile, services, products, link
                             <div className="bg-slate-950 p-8 rounded-[2.5rem] flex flex-col items-center gap-8 text-center">
                                 <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Verify Profile</h4>
                                 <div className="p-4 bg-white rounded-3xl">
-                                    <ProfileQRCode url={`https://linklane.app/${username}`} size={160} />
+                                    <ProfileQRCode url={`https://linklane.in/${username}`} size={160} />
                                 </div>
                                 <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-relaxed">
                                     Scan to verify this professional profile system
@@ -378,7 +378,7 @@ export default function ProfessionalTemplate({ profile, services, products, link
                 {/* Footer Branding */}
                 <div className="mt-40 pt-20 border-t border-slate-100 flex flex-col items-center gap-12 pb-20 opacity-40 hover:opacity-100 transition-all duration-700">
                     <div className="bg-white p-6 rounded-[2.5rem] shadow-2xl shadow-indigo-100/20 border border-slate-50 rotate-3 hover:rotate-0 transition-transform duration-500">
-                        <ProfileQRCode url={`https://linklane.app/${username}`} size={160} />
+                        <ProfileQRCode url={`https://linklane.in/${username}`} size={160} />
                     </div>
                     <Link href="/" className="flex flex-col items-center gap-6 group">
                         <div className="px-8 py-3 bg-slate-900 rounded-2xl flex items-center gap-3 group-hover:bg-indigo-600 transition-all shadow-xl shadow-indigo-500/10">

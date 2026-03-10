@@ -105,7 +105,7 @@ export default async function PublicPage({ params }: PageParams) {
         "name": profile.display_name,
         "description": profile.bio,
         "image": profile.avatar_url,
-        "url": `https://linklane.app/${username}`,
+        "url": `https://linklane.in/${username}`,
         ...(profile.location && {
             "address": {
                 "@type": "PostalAddress",
