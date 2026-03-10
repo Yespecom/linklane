@@ -37,7 +37,7 @@ export default async function OverviewPage() {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <header className="sticky top-0 z-30 border-b border-slate-100 bg-white/80 p-4 backdrop-blur-xl lg:p-6 mb-8 rounded-3xl">
+            <header className="lg:sticky top-0 z-30 border-b border-slate-100 bg-white/80 p-4 backdrop-blur-xl lg:p-6 mb-8 rounded-3xl">
                 <div className="flex items-center justify-between mx-auto max-w-7xl w-full">
                     <div>
                         <h1 className="text-xl font-black text-slate-900 tracking-tight">Profile Overview</h1>
