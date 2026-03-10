@@ -2,12 +2,12 @@
 
 import { createClient } from "@/utils/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Loader2, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 
-export default function SignupPage() {
+function SignupContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const supabase = createClient();
@@ -233,3 +233,16 @@ export default function SignupPage() {
         </div>
     );
 }
+
+export default function SignupPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex min-h-screen items-center justify-center bg-slate-50">
+                <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
+            </div>
+        }>
+            <SignupContent />
+        </Suspense>
+    );
+}
+
