@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #3B82F6;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #000000;
+  --color-secondary-foreground: #FFFFFF;
+  --color-accent: #3B82F6;
+  --color-accent-foreground: #FFFFFF;
+  --color-destructive: #EF4444;
+  --color-destructive-foreground: #FFFFFF;
+  --color-border: #E5E7EB;
+  --color-input: #E5E7EB;
+  --color-ring: #3B82F6;
+  --radius-xl: 1.5rem;
+}
+
+@layer base {
+  body {
+    @apply antialiased;
+    background-color: #FFFFFF;
+    color: #000000;
+  }
+
+  ::selection {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: #3B82F6;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply border border-slate-200 bg-white/10 backdrop-blur-md;
+  }
+
+  .glass-card {
+    @apply bg-white border border-slate-100 shadow-xl;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-br from-blue-600 to-blue-400 bg-clip-text text-transparent;
+  }
+
+  .gradient-bg {
+    @apply bg-gradient-to-br from-blue-600 to-blue-500;
+  }
+}
