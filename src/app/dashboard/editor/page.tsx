@@ -475,15 +475,16 @@ export default function EditorPage() {
                                 <div className="space-y-4">
                                     {links.map((l, idx) => (
                                         <div key={idx} className="flex flex-col gap-4 p-6 border border-slate-100 bg-slate-50 rounded-[2rem] relative group group-hover:bg-white transition-all shadow-sm">
-                                            <div className="flex items-center gap-4">
-                                                <div className="h-10 w-10 flex items-center justify-center bg-white rounded-xl border border-slate-100 shrink-0 shadow-sm relative overflow-hidden group/icon">
+                                            <button onClick={() => setLinks(links.filter((_, i) => i !== idx))} className="absolute top-6 right-6 text-slate-300 hover:text-red-500 transition-colors z-10"><Trash2 className="h-5 w-5" /></button>
+                                            <div className="flex items-start gap-4 pr-10">
+                                                <div className="h-12 w-12 flex items-center justify-center bg-white rounded-xl border border-slate-100 shrink-0 shadow-sm relative overflow-hidden group/icon mt-1">
                                                     {l.icon_url ? (
                                                         <img src={l.icon_url} className="w-full h-full object-cover" />
                                                     ) : (
-                                                        <LinkIcon className="h-4 w-4 text-slate-300" />
+                                                        <LinkIcon className="h-5 w-5 text-slate-300" />
                                                     )}
                                                     <label className="absolute inset-0 bg-slate-900/60 flex items-center justify-center opacity-0 group-hover/icon:opacity-100 cursor-pointer transition-all">
-                                                        <Upload className="h-3 w-3 text-white" />
+                                                        <Upload className="h-4 w-4 text-white" />
                                                         <input type="file" className="hidden" accept="image/*"
                                                             onChange={async (e) => {
                                                                 const file = e.target.files?.[0];
@@ -503,33 +504,32 @@ export default function EditorPage() {
                                                     </label>
                                                 </div>
                                                 <div className="flex-1 space-y-3">
-                                                    <div className="grid grid-cols-2 gap-3">
-                                                        <input value={l.title} onChange={(e) => { const n = [...links]; n[idx].title = e.target.value; setLinks(n); }} className="bg-white border border-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold w-full" placeholder="Label (e.g. My Website)" />
-                                                        <input value={l.url} onChange={(e) => { const n = [...links]; n[idx].url = e.target.value; setLinks(n); }} className="bg-white border border-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold w-full text-blue-600" placeholder="https://..." />
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                        <input value={l.title} onChange={(e) => { const n = [...links]; n[idx].title = e.target.value; setLinks(n); }} className="bg-white border border-slate-100 px-4 py-3 rounded-xl text-sm font-bold w-full" placeholder="Label (e.g. My Website)" />
+                                                        <input value={l.url} onChange={(e) => { const n = [...links]; n[idx].url = e.target.value; setLinks(n); }} className="bg-white border border-slate-100 px-4 py-3 rounded-xl text-sm font-bold w-full text-blue-600" placeholder="https://..." />
                                                     </div>
 
                                                     {/* Quick Presets */}
                                                     <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-                                                        <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest shrink-0">Presets:</span>
+                                                        <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest shrink-0">Presets:</span>
                                                         {[
                                                             { name: "WhatsApp", url: "https://wa.me/..." },
                                                             { name: "Instagram", url: "https://instagram.com/..." },
                                                             { name: "TikTok", url: "https://tiktok.com/@..." },
                                                             { name: "Spotify", url: "https://open.spotify.com/..." },
-                                                            { name: "Apple Music", url: "https://music.apple.com/..." },
-                                                            { name: "Twitter", url: "https://x.com/..." }
+                                                            { name: "Apple", url: "https://music.apple.com/..." },
+                                                            { name: "X", url: "https://x.com/..." }
                                                         ].map(preset => (
                                                             <button
                                                                 key={preset.name}
                                                                 onClick={() => { const n = [...links]; n[idx].title = preset.name; n[idx].url = preset.url; setLinks(n); }}
-                                                                className="px-3 py-1 bg-white border border-slate-100 rounded-full text-[8px] font-black uppercase text-slate-400 hover:text-blue-600 hover:border-blue-100 transition-all shrink-0"
+                                                                className="px-3 py-1.5 bg-white border border-slate-100 rounded-full text-[9px] font-black uppercase text-slate-400 hover:text-blue-600 hover:border-blue-100 transition-all shrink-0"
                                                             >
                                                                 {preset.name}
                                                             </button>
                                                         ))}
                                                     </div>
                                                 </div>
-                                                <button onClick={() => setLinks(links.filter((_, i) => i !== idx))} className="text-slate-200 hover:text-red-500 transition-colors"><Trash2 className="h-4 w-4" /></button>
                                             </div>
                                         </div>
                                     ))}
