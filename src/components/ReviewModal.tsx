@@ -27,10 +27,18 @@ export default function ReviewModal({ isOpen, onClose, profileId, isVerified }: 
                     company,
                     rating,
                     comment,
-                    status: "pending"
+                    status: "approved"
                 });
 
             if (error) throw error;
+
+            // Send notification email via SMTP route
+            fetch("/api/reviews/notify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ profileId, name, company, comment, rating })
+            }).catch((err) => console.error("Failed to send notification:", err));
+
             setSubmitted(true);
             setTimeout(() => {
                 onClose();
@@ -78,7 +86,7 @@ export default function ReviewModal({ isOpen, onClose, profileId, isVerified }: 
                                     <CheckCircle2 className="h-10 w-10 text-green-500" />
                                 </div>
                                 <h3 className="text-2xl font-black text-slate-900 mb-2">Review Submitted!</h3>
-                                <p className="text-slate-500 font-medium">Thank you for your feedback. It will appear on the page once approved by the owner.</p>
+                                <p className="text-slate-500 font-medium">Thank you for your feedback. It is now live on the page.</p>
                             </div>
                         ) : (
                             <>

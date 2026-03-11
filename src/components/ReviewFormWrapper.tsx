@@ -26,10 +26,18 @@ export default function ReviewFormWrapper({ profileId }: { profileId: string }) 
                     company,
                     rating,
                     comment,
-                    status: "pending"
+                    status: "approved"
                 });
 
             if (error) throw error;
+
+            // Send notification email via SMTP route
+            fetch("/api/reviews/notify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ profileId, name, company, comment, rating })
+            }).catch((err) => console.error("Failed to send notification:", err));
+
             setSubmitted(true);
         } catch (err: any) {
             alert(err.message);
@@ -45,7 +53,7 @@ export default function ReviewFormWrapper({ profileId }: { profileId: string }) 
                     <CheckCircle2 className="h-10 w-10 text-green-500" />
                 </div>
                 <h3 className="text-2xl font-black text-slate-900 mb-2">Thank You!</h3>
-                <p className="text-slate-500 font-medium">Your review has been submitted for approval.</p>
+                <p className="text-slate-500 font-medium">Your review has been successfully submitted and is now live.</p>
             </div>
         );
     }
@@ -64,8 +72,8 @@ export default function ReviewFormWrapper({ profileId }: { profileId: string }) 
                     >
                         <Star
                             className={`h-10 w-10 transition-colors ${(hover || rating) >= star
-                                    ? "fill-yellow-400 text-yellow-400"
-                                    : "text-slate-200"
+                                ? "fill-yellow-400 text-yellow-400"
+                                : "text-slate-200"
                                 }`}
                         />
                     </button>

@@ -55,25 +55,32 @@ export default function ContactPage() {
                             className="relative"
                         >
                             <div className="absolute inset-0 bg-blue-600/20 blur-[100px] rounded-full" />
-                            <div className="relative bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[3rem] p-8 md:p-12 space-y-10">
+                            <form
+                                className="relative bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[3rem] p-8 md:p-12 space-y-10"
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    const fd = new FormData(e.currentTarget);
+                                    window.location.href = `mailto:hello@linklane.in?subject=Contact%20Inquiry:%20${encodeURIComponent(fd.get('name') as string)}&body=${encodeURIComponent(fd.get('message') as string)}%0A%0A---%0AReply%20To:%20${encodeURIComponent(fd.get('email') as string)}`;
+                                }}
+                            >
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Full Name</p>
-                                        <input type="text" className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold focus:outline-none focus:border-blue-500/50 transition-all" placeholder="Enter name" />
+                                        <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Full Name</label>
+                                        <input required name="name" type="text" className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold focus:outline-none focus:border-blue-500/50 transition-all" placeholder="Enter name" />
                                     </div>
                                     <div className="space-y-2">
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Email Address</p>
-                                        <input type="email" className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold focus:outline-none focus:border-blue-500/50 transition-all" placeholder="Enter email" />
+                                        <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Email Address</label>
+                                        <input required name="email" type="email" className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold focus:outline-none focus:border-blue-500/50 transition-all" placeholder="Enter email" />
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Message</p>
-                                    <textarea rows={4} className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold focus:outline-none focus:border-blue-500/50 transition-all resize-none" placeholder="How can we help?" />
+                                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Message</label>
+                                    <textarea required name="message" rows={4} className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold focus:outline-none focus:border-blue-500/50 transition-all resize-none" placeholder="How can we help?" />
                                 </div>
-                                <button className="w-full py-6 bg-blue-600 text-white rounded-[2rem] text-sm font-black uppercase tracking-[0.2em] shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3 hover:bg-white hover:text-slate-950 transition-all group">
+                                <button type="submit" className="w-full py-6 bg-blue-600 text-white rounded-[2rem] text-sm font-black uppercase tracking-[0.2em] shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3 hover:bg-white hover:text-slate-950 transition-all group active:scale-95">
                                     Send Message <Send className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                                 </button>
-                            </div>
+                            </form>
                         </motion.div>
                     </div>
                 </section>

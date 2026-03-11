@@ -77,8 +77,8 @@ export default function LinklaneTemplate({ profile, services, products, links, r
 VERSION:3.0
 FN:${profile.display_name}
 TITLE:${profile.title || ""}
-ORG:${profile.company || ""}
-${profile.email ? `EMAIL;TYPE=INTERNET:${profile.email}` : ""}
+${profile.company ? `ORG:${profile.company}` : ""}
+${profile.contact_email ? `EMAIL;TYPE=INTERNET:${profile.contact_email}` : ""}
 ${profile.phone ? `TEL;TYPE=CELL:${profile.phone}` : ""}
 ${profile.location ? `ADR;TYPE=WORK:;;;${profile.location}` : ""}
 URL:https://linklane.in/${username}
@@ -229,7 +229,7 @@ END:VCARD`;
                             <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Call</span>
                         </a>
                         <a
-                            href={`mailto:${profile.email}`}
+                            href={`mailto:${profile.contact_email}`}
                             onClick={() => trackClick("Email Contact", "email")}
                             className="flex flex-col items-center justify-center py-4 bg-white border border-slate-100 rounded-xl text-slate-900 shadow-sm hover:bg-slate-50 transition-all active:scale-95 gap-1.5"
                         >
@@ -309,7 +309,7 @@ END:VCARD`;
                                     <button
                                         onClick={() => {
                                             trackClick(`Service Inquiry: ${service.title}`, "click_service");
-                                            window.location.href = `mailto:${profile.email}?subject=Inquiry: ${service.title}`;
+                                            window.location.href = `mailto:${profile.contact_email}?subject=Inquiry: ${service.title}`;
                                         }}
                                         className="w-full py-3 text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-lg"
                                         style={{
