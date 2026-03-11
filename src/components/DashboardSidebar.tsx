@@ -23,6 +23,7 @@ interface SidebarProps {
 
 const navItems = [
     { icon: BarChart3, label: "Overview", href: "/dashboard" },
+    { icon: Users, label: "Leads", href: "/dashboard/leads" },
     { icon: LinkIcon, label: "Links", href: "/dashboard/links" },
     { icon: Star, label: "Reviews", href: "/dashboard/reviews" },
     { icon: Settings, label: "Settings", href: "/dashboard/settings" },

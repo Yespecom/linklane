@@ -17,18 +17,62 @@ import ProfileQRCode from "@/components/ProfileQRCode";
 import BrandIcon from "@/components/BrandIcon";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReviewModal from "@/components/ReviewModal";
 import VerifiedBadge from "@/components/VerifiedBadge";
+import { createClient } from "@/utils/supabase/client";
 
 export default function LinklaneTemplate({ profile, services, products, links, reviews, username, otherLanes }: any) {
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+    const supabase = createClient();
+
+    useEffect(() => {
+        if (!profile?.id) return;
+        const trackView = async () => {
+            try {
+                let sessionKey = sessionStorage.getItem(`ll_session_${profile.id}_view`);
+                if (!sessionKey) {
+                    sessionKey = Math.random().toString(36).substring(2, 15);
+                    sessionStorage.setItem(`ll_session_${profile.id}_view`, sessionKey);
+                    await supabase.from('leads').insert({
+                        profile_id: profile.id,
+                        type: 'view',
+                        target: 'Profile Page',
+                        session_key: sessionKey
+                    });
+                }
+            } catch (e) {
+                // Silently ignore tracking errors for users
+            }
+        };
+        trackView();
+    }, [profile?.id, supabase]);
+
+    const trackClick = async (target: string, type: string = 'click') => {
+        if (!profile?.id) return;
+        try {
+            let sessionKey = sessionStorage.getItem(`ll_session_${profile.id}_${target}`);
+            if (!sessionKey) {
+                sessionKey = Math.random().toString(36).substring(2, 15);
+                sessionStorage.setItem(`ll_session_${profile.id}_${target}`, sessionKey);
+                await supabase.from('leads').insert({
+                    profile_id: profile.id,
+                    type,
+                    target,
+                    session_key: sessionKey
+                });
+            }
+        } catch (e) {
+            // Silently ignore
+        }
+    };
 
     const averageRating = reviews?.length > 0
         ? (reviews.reduce((acc: number, rev: any) => acc + rev.rating, 0) / reviews.length).toFixed(1)
         : null;
 
     const saveContact = () => {
+        trackClick("Save Contact", "click");
         const vcard = `BEGIN:VCARD
 VERSION:3.0
 FN:${profile.display_name}
@@ -51,6 +95,7 @@ END:VCARD`;
     };
 
     const shareProfile = async () => {
+        trackClick("Share Profile", "click");
         if (typeof navigator !== 'undefined' && navigator.share) {
             try {
                 await navigator.share({
@@ -138,7 +183,7 @@ END:VCARD`;
 
                         {averageRating && (
                             <div className="flex flex-col items-center gap-3 pt-1">
-                                <div className="flex items-center justify-center gap-1.5 cursor-pointer hover:opacity-70 transition-opacity" onClick={() => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })}>
+                                <div className="flex items-center justify-center gap-1.5 cursor-pointer hover:opacity-70 transition-opacity" onClick={() => { trackClick("View Reviews", "click"); document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' }) }}>
                                     <div className="flex text-amber-400">
                                         <Star className="h-3.5 w-3.5 fill-current" />
                                     </div>
@@ -146,7 +191,7 @@ END:VCARD`;
                                     <span className="text-xs font-bold text-slate-300">({reviews.length} reviews)</span>
                                 </div>
                                 <button
-                                    onClick={() => setIsReviewModalOpen(true)}
+                                    onClick={() => { trackClick("Click Write Review Button", "click"); setIsReviewModalOpen(true) }}
                                     className="px-6 py-2 bg-slate-50 border border-slate-100 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-blue-50/50 transition-all active:scale-95"
                                     style={{ color: profile.accent_color || "#3B82F6" }}
                                 >
@@ -177,6 +222,7 @@ END:VCARD`;
                     <div className="grid grid-cols-2 gap-3 font-poppins">
                         <a
                             href={`tel:${profile.phone}`}
+                            onClick={() => trackClick("Phone Call", "call")}
                             className="flex flex-col items-center justify-center py-4 bg-white border border-slate-100 rounded-xl text-slate-900 shadow-sm hover:bg-slate-50 transition-all active:scale-95 gap-1.5"
                         >
                             <Phone className="h-4 w-4 text-slate-950" />
@@ -184,6 +230,7 @@ END:VCARD`;
                         </a>
                         <a
                             href={`mailto:${profile.email}`}
+                            onClick={() => trackClick("Email Contact", "email")}
                             className="flex flex-col items-center justify-center py-4 bg-white border border-slate-100 rounded-xl text-slate-900 shadow-sm hover:bg-slate-50 transition-all active:scale-95 gap-1.5"
                         >
                             <Mail className="h-4 w-4 text-slate-950" />
@@ -205,6 +252,7 @@ END:VCARD`;
                                     key={link.id}
                                     href={link.url}
                                     target="_blank"
+                                    onClick={() => trackClick(`Link: ${link.title}`, "click_link")}
                                     className="group relative overflow-hidden p-5 bg-white border border-slate-100 rounded-[1.5rem] flex items-center justify-between transition-all hover:border-slate-200 hover:shadow-xl hover:shadow-slate-200/40 active:scale-[0.98]"
                                 >
                                     <div className="flex items-center gap-4">
@@ -259,7 +307,10 @@ END:VCARD`;
                                         </div>
                                     </div>
                                     <button
-                                        onClick={() => window.location.href = `mailto:${profile.email}?subject=Inquiry: ${service.title}`}
+                                        onClick={() => {
+                                            trackClick(`Service Inquiry: ${service.title}`, "click_service");
+                                            window.location.href = `mailto:${profile.email}?subject=Inquiry: ${service.title}`;
+                                        }}
                                         className="w-full py-3 text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-lg"
                                         style={{
                                             backgroundColor: profile.accent_color || "#0f172a",
@@ -302,6 +353,7 @@ END:VCARD`;
                                             <a
                                                 href={product.buy_url}
                                                 target="_blank"
+                                                onClick={() => trackClick(`Product: ${product.name}`, "click_product")}
                                                 className="px-8 py-3 text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all active:scale-[0.98] shadow-lg"
                                                 style={{
                                                     backgroundColor: profile.accent_color || "#0f172a",
@@ -329,6 +381,7 @@ END:VCARD`;
                                 <Link
                                     key={lane.id}
                                     href={`/${lane.username}`}
+                                    onClick={() => trackClick(`Other Profile: ${lane.username}`, "click_profile")}
                                     className="p-4 bg-white border border-slate-100 rounded-xl flex items-center justify-between group hover:border-slate-200 transition-all"
                                 >
                                     <div className="flex items-center gap-4">
@@ -364,7 +417,7 @@ END:VCARD`;
                             )}
                         </div>
                         <button
-                            onClick={() => setIsReviewModalOpen(true)}
+                            onClick={() => { trackClick("Click Write Review Button", "click"); setIsReviewModalOpen(true); }}
                             className="text-[9px] font-black uppercase tracking-widest hover:underline font-poppins"
                             style={{ color: profile.accent_color || "#3B82F6" }}
                         >
@@ -398,7 +451,7 @@ END:VCARD`;
                     </div>
 
                     <button
-                        onClick={() => setIsReviewModalOpen(true)}
+                        onClick={() => { trackClick("Write a Review Button", "click"); setIsReviewModalOpen(true); }}
                         className="w-full py-4 bg-white border border-slate-200 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all font-poppins"
                         style={{ color: profile.accent_color || "#3B82F6" }}
                     >
@@ -406,18 +459,20 @@ END:VCARD`;
                     </button>
                 </section>
 
-                {/* 8. FOOTER */}
-                <footer className="pt-20 pb-12 flex flex-col items-center space-y-8 opacity-40 hover:opacity-100 transition-all duration-700">
+                <footer className="pt-20 pb-12 flex flex-col items-center space-y-8 opacity-60 hover:opacity-100 transition-all duration-700">
                     <div className="p-4 bg-white rounded-2xl shadow-sm border border-slate-100">
                         <ProfileQRCode url={`https://linklane.in/${username}`} size={140} />
                     </div>
-                    <Link href="/" className="flex flex-col items-center gap-4 group">
-                        <div className="px-6 py-2.5 bg-white border border-slate-200 rounded-lg flex items-center gap-2 transition-all hover:border-slate-300 shadow-sm">
+                    <div className="flex flex-col items-center gap-4 group">
+                        <Link href="/claim" onClick={() => trackClick("Create your Linklane Button", "click")} className="px-8 py-3.5 bg-slate-900 border border-slate-800 text-white rounded-xl shadow-lg shadow-black/10 flex items-center gap-3 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 active:scale-95">
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Create your Linklane</span>
+                            <ArrowRight className="h-4 w-4" />
+                        </Link>
+                        <Link href="/" onClick={() => trackClick("Linklane Footer Logo", "click")} className="flex items-center gap-2 mt-2 opacity-70 hover:opacity-100 transition-opacity">
                             <Zap className="h-3 w-3 fill-slate-950 text-slate-950" />
                             <span className="text-[9px] font-black uppercase tracking-[0.1em] text-slate-950">Powered by Linklane</span>
-                        </div>
-                        <span className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em]">Universal Profile System</span>
-                    </Link>
+                        </Link>
+                    </div>
                 </footer>
             </div>
 

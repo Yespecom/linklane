@@ -503,14 +503,14 @@ export default function EditorPage() {
                                                         />
                                                     </label>
                                                 </div>
-                                                <div className="flex-1 space-y-3">
-                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                                        <input value={l.title} onChange={(e) => { const n = [...links]; n[idx].title = e.target.value; setLinks(n); }} className="bg-white border border-slate-100 px-4 py-3 rounded-xl text-sm font-bold w-full" placeholder="Label (e.g. My Website)" />
-                                                        <input value={l.url} onChange={(e) => { const n = [...links]; n[idx].url = e.target.value; setLinks(n); }} className="bg-white border border-slate-100 px-4 py-3 rounded-xl text-sm font-bold w-full text-blue-600" placeholder="https://..." />
+                                                <div className="flex-1 min-w-0 space-y-3">
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
+                                                        <input value={l.title} onChange={(e) => { const n = [...links]; n[idx].title = e.target.value; setLinks(n); }} className="bg-white border border-slate-100 px-4 py-3 rounded-xl text-sm font-bold w-full min-w-0" placeholder="Label (e.g. My Website)" />
+                                                        <input value={l.url} onChange={(e) => { const n = [...links]; n[idx].url = e.target.value; setLinks(n); }} className="bg-white border border-slate-100 px-4 py-3 rounded-xl text-sm font-bold w-full text-blue-600 min-w-0" placeholder="https://..." />
                                                     </div>
 
                                                     {/* Quick Presets */}
-                                                    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+                                                    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 w-full relative">
                                                         <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest shrink-0">Presets:</span>
                                                         {[
                                                             { name: "WhatsApp", url: "https://wa.me/..." },

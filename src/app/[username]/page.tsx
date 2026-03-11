@@ -37,14 +37,14 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
         openGraph: {
             title: profile.seo_title || defaultTitle,
             description: profile.seo_description || defaultDesc,
-            images: [profile.avatar_url || "/og-image.png"],
+            ...(profile.avatar_url ? { images: [profile.avatar_url] } : {}),
             type: 'profile',
         },
         twitter: {
             card: 'summary_large_image',
             title: profile.seo_title || defaultTitle,
             description: profile.seo_description || defaultDesc,
-            images: [profile.avatar_url || "/og-image.png"],
+            ...(profile.avatar_url ? { images: [profile.avatar_url] } : {}),
         }
     };
 }
