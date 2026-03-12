@@ -88,16 +88,6 @@ export default async function PublicPage({ params }: PageParams) {
         .eq("status", "approved")
         .order("created_at", { ascending: false });
 
-    // Fetch Other Lanes (profiles by the same user)
-    // We try by user_id if it exists, otherwise fall back to empty
-    // This supports the multi-lane feature
-    const { data: otherLanes } = profile.user_id ? await supabase
-        .from("profiles")
-        .select("id, username, display_name, avatar_url, banner_url")
-        .eq("user_id", profile.user_id)
-        .not("id", "eq", profile.id)
-        .limit(3) : { data: [] };
-
     // --- JSON-LD Structured Data ---
     const jsonLd = {
         "@context": "https://schema.org",
@@ -128,7 +118,6 @@ export default async function PublicPage({ params }: PageParams) {
         links,
         reviews: reviews || [],
         username,
-        otherLanes: otherLanes || []
     };
 
     return (

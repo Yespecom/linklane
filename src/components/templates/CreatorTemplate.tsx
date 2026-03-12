@@ -232,7 +232,12 @@ export default function CreatorTemplate({ profile, services, products, links, re
                                                 <div className="h-14 w-14 rounded-2xl bg-white flex items-center justify-center mb-8 shadow-sm border border-slate-100 group-hover:bg-rose-500 group-hover:text-white transition-all">
                                                     <Zap className="h-6 w-6 fill-current" />
                                                 </div>
-                                                <h3 className="font-black text-2xl text-slate-900 mb-4 leading-tight group-hover:text-rose-500 transition-colors">{service.title}</h3>
+                                                <h3 className="font-black text-2xl text-slate-900 mb-2 leading-tight group-hover:text-rose-500 transition-colors">{service.title}</h3>
+                                                {service.price && (
+                                                    <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-4 block">
+                                                        Starting from ₹{service.price}
+                                                    </span>
+                                                )}
                                                 <p className="text-base font-medium text-slate-500 mb-10 leading-relaxed flex-1 italic">&quot;{service.description}&quot;</p>
                                                 <button
                                                     onClick={scrollToContact}
@@ -241,6 +246,34 @@ export default function CreatorTemplate({ profile, services, products, links, re
                                                     Book Experience
                                                 </button>
                                             </motion.div>
+                                        ))}
+                                    </div>
+                                </section>
+                            )}
+
+                            {/* Creator Lanes */}
+                            {(arguments[0] as any).userLanes?.length > 0 && (
+                                <section id="lanes">
+                                    <div className="flex items-center justify-between mb-10 px-2">
+                                        <h2 className="text-xl font-black uppercase tracking-[0.3em] text-slate-900 border-l-[6px] border-rose-500 pl-6">Lanes by {profile.display_name}</h2>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {(arguments[0] as any).userLanes.map((lane: any) => (
+                                            <Link
+                                                key={lane.id}
+                                                href={`/lanes/${lane.slug}`}
+                                                className="bg-slate-50 border border-slate-100 rounded-[2.5rem] p-10 group transition-all hover:bg-white hover:border-rose-500 hover:shadow-2xl flex flex-col h-full relative overflow-hidden"
+                                            >
+                                                <div className="flex items-center justify-between mb-6">
+                                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 italic">{lane.category}</span>
+                                                    <ChevronRight className="h-4 w-4 text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                </div>
+                                                <h3 className="font-black text-2xl text-slate-900 mb-4 leading-tight group-hover:text-rose-500 transition-colors">{lane.title}</h3>
+                                                <p className="text-base font-medium text-slate-500 mb-8 leading-relaxed flex-1 italic line-clamp-2">&quot;{lane.content}&quot;</p>
+                                                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 pt-4 border-t border-slate-100">
+                                                    Open Story <Zap className="h-3 w-3 text-rose-500 fill-rose-500" />
+                                                </div>
+                                            </Link>
                                         ))}
                                     </div>
                                 </section>

@@ -19,6 +19,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
     }));
 
+    const reviewUrls = (profiles || []).map((profile) => ({
+        url: `${baseUrl}/${profile.username}/review`,
+        lastModified: profile.updated_at || new Date().toISOString(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.5,
+    }));
+
     return [
         {
             url: baseUrl,
@@ -32,6 +39,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: 'daily',
             priority: 0.9,
         },
+        {
+            url: `${baseUrl}/claim`,
+            lastModified: new Date(),
+            changeFrequency: 'daily',
+            priority: 0.9,
+        },
         ...profileUrls,
+        ...reviewUrls,
     ];
 }

@@ -87,6 +87,7 @@ export default function OnboardingPage() {
                 .from("profiles")
                 .upsert({
                     id: user.id,
+                    user_id: user.id,
                     username: username,
                     display_name: profile.displayName,
                     bio: profile.bio,

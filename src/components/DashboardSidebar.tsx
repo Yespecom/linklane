@@ -19,18 +19,19 @@ import {
 interface SidebarProps {
     isOpen: boolean;
     onClose: () => void;
+    username?: string;
 }
 
-const navItems = [
-    { icon: BarChart3, label: "Overview", href: "/dashboard" },
-    { icon: Users, label: "Leads", href: "/dashboard/leads" },
-    { icon: LinkIcon, label: "Links", href: "/dashboard/links" },
-    { icon: Star, label: "Reviews", href: "/dashboard/reviews" },
-    { icon: Settings, label: "Settings", href: "/dashboard/settings" },
-];
-
-export default function DashboardSidebar({ isOpen, onClose }: SidebarProps) {
+export default function DashboardSidebar({ isOpen, onClose, username = "dashboard" }: SidebarProps) {
     const pathname = usePathname();
+    
+    const navItems = [
+        { icon: BarChart3, label: "Overview", href: "/dashboard" },
+        { icon: Users, label: "Leads", href: "/dashboard/leads" },
+        { icon: LinkIcon, label: "Links", href: "/dashboard/links" },
+        { icon: Star, label: "Reviews", href: "/dashboard/reviews" },
+        { icon: Settings, label: "Settings", href: "/dashboard/settings" },
+    ];
 
     return (
         <>

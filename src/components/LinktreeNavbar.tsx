@@ -3,18 +3,37 @@
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, X, ArrowUpRight, ChevronRight } from "lucide-react";
+import { Menu, X, ArrowUpRight, ChevronRight, User } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
-export default function LinktreeNavbar() {
+export default function LinktreeNavbar({ isDashboard = false }: { isDashboard?: boolean }) {
     const { scrollY } = useScroll();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    const supabase = createClient();
+    const [user, setUser] = useState<any>(null);
+    const [profile, setProfile] = useState<any>(null);
+
     useEffect(() => {
+        const checkUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                setUser(user);
+                const { data: profile } = await supabase
+                    .from("profiles")
+                    .select("*")
+                    .eq("id", user.id)
+                    .single();
+                setProfile(profile);
+            }
+        };
+        checkUser();
+
         return scrollY.onChange((latest) => {
             setIsScrolled(latest > 50);
         });
-    }, [scrollY]);
+    }, [scrollY, supabase]);
 
     const navY = useTransform(scrollY, [0, 100], [32, 16]);
     const navScale = useTransform(scrollY, [0, 100], [1, 0.95]);
@@ -29,7 +48,7 @@ export default function LinktreeNavbar() {
         <>
             <motion.nav
                 style={{ top: navY, scale: navScale }}
-                className={`fixed left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-7xl transition-all duration-500`}
+                className={`fixed ${isDashboard ? "lg:left-[calc(50%+144px)] lg:w-[calc(95%-288px)]" : "left-1/2"} -translate-x-1/2 z-[100] w-[95%] max-w-7xl transition-all duration-500`}
             >
                 <div className={`
                     relative px-6 lg:px-10 py-4 flex items-center justify-between transition-all duration-500 rounded-[3.5rem]
@@ -69,19 +88,39 @@ export default function LinktreeNavbar() {
                     </div>
 
                     <div className="flex items-center gap-4 lg:gap-6">
-                        <Link
-                            href="/login"
-                            className="hidden sm:inline-flex text-xs font-black uppercase tracking-widest text-slate-400 hover:text-slate-950 transition-colors"
-                        >
-                            Sign In
-                        </Link>
-                        <Link
-                            href="/claim"
-                            className="hidden lg:relative lg:group bg-slate-900 text-white px-10 py-5 rounded-[2.5rem] text-xs font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-2xl hover:shadow-blue-600/20 active:scale-95 overflow-hidden"
-                        >
-                            <span className="relative z-10">Create New Account</span>
-                            <div className="absolute inset-x-0 bottom-0 h-1 bg-white/20 transition-all group-hover:h-full" />
-                        </Link>
+                        {user ? (
+                            <Link href="/dashboard" className="flex items-center gap-3 active:scale-95 transition-transform group">
+                                <div className="h-10 w-10 rounded-2xl bg-slate-50 border border-slate-100 p-0.5 group-hover:border-blue-500/50 transition-all overflow-hidden">
+                                    {profile?.avatar_url ? (
+                                        <img src={profile.avatar_url} className="w-full h-full object-cover rounded-[0.9rem]" alt="Profile" />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-blue-100 text-blue-600 rounded-[0.9rem]">
+                                            <User className="h-4 w-4" />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="hidden sm:flex flex-col">
+                                    <span className="text-[10px] font-black uppercase tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">Dashboard</span>
+                                    <span className="text-[8px] font-bold text-slate-400">@{profile?.username || 'user'}</span>
+                                </div>
+                            </Link>
+                        ) : (
+                            <>
+                                <Link
+                                    href="/login"
+                                    className="hidden sm:inline-flex text-xs font-black uppercase tracking-widest text-slate-400 hover:text-slate-950 transition-colors"
+                                >
+                                    Sign In
+                                </Link>
+                                <Link
+                                    href="/claim"
+                                    className="hidden lg:relative lg:group bg-slate-900 text-white px-10 py-5 rounded-[2.5rem] text-xs font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-2xl hover:shadow-blue-600/20 active:scale-95 overflow-hidden"
+                                >
+                                    <span className="relative z-10">Create New Account</span>
+                                    <div className="absolute inset-x-0 bottom-0 h-1 bg-white/20 transition-all group-hover:h-full" />
+                                </Link>
+                            </>
+                        )}
 
                         {/* Mobile Menu Toggle */}
                         <button
@@ -158,20 +197,32 @@ export default function LinktreeNavbar() {
                                 <div className="h-px w-full bg-slate-100" />
 
                                 <div className="flex flex-col gap-4">
-                                    <Link
-                                        href="/login"
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        className="w-full py-5 text-center text-sm font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors"
-                                    >
-                                        Sign In Existing Profile
-                                    </Link>
-                                    <Link
-                                        href="/claim"
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        className="w-full py-6 bg-blue-600 text-white rounded-[2rem] text-sm font-black uppercase tracking-[0.2em] shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3 active:scale-[0.98] transition-all"
-                                    >
-                                        Get Started <ArrowUpRight className="h-4 w-4" />
-                                    </Link>
+                                    {user ? (
+                                        <Link
+                                            href="/dashboard"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className="w-full py-6 bg-slate-950 text-white rounded-[2rem] text-sm font-black uppercase tracking-[0.2em] shadow-xl flex items-center justify-center gap-3 active:scale-[0.98] transition-all"
+                                        >
+                                            Go to Dashboard <ArrowUpRight className="h-4 w-4" />
+                                        </Link>
+                                    ) : (
+                                        <>
+                                            <Link
+                                                href="/login"
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className="w-full py-5 text-center text-sm font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors"
+                                            >
+                                                Sign In Existing Profile
+                                            </Link>
+                                            <Link
+                                                href="/claim"
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className="w-full py-6 bg-blue-600 text-white rounded-[2rem] text-sm font-black uppercase tracking-[0.2em] shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3 active:scale-[0.98] transition-all"
+                                            >
+                                                Get Started <ArrowUpRight className="h-4 w-4" />
+                                            </Link>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>

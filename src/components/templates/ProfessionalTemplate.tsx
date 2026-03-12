@@ -284,7 +284,7 @@ export default function ProfessionalTemplate({ profile, services, products, link
                                                         <p className="text-base font-medium text-slate-500 max-w-xl leading-relaxed">{service.description}</p>
                                                         {service.price && (
                                                             <div className="inline-flex items-center px-4 py-2 bg-slate-50 rounded-xl text-[10px] font-black text-blue-600 uppercase tracking-widest border border-slate-100">
-                                                                Starts at {service.price}
+                                                                Starts at ₹{service.price}
                                                             </div>
                                                         )}
                                                     </div>
@@ -296,6 +296,37 @@ export default function ProfessionalTemplate({ profile, services, products, link
                                                     </button>
                                                 </div>
                                             </motion.div>
+                                        ))}
+                                    </div>
+                                </section>
+                            )}
+
+                            {/* Lanes Section */}
+                            {(arguments[0] as any).userLanes?.length > 0 && (
+                                <section id="lanes">
+                                    <div className="flex items-center justify-between mb-8 px-2">
+                                        <h2 className="text-xl font-black text-slate-950 flex items-center gap-3">
+                                            <div className="h-8 w-1.5 bg-blue-600 rounded-full" />
+                                            Lanes by {profile.display_name}
+                                        </h2>
+                                    </div>
+                                    <div className="grid grid-cols-1 gap-6">
+                                        {(arguments[0] as any).userLanes.map((lane: any) => (
+                                            <Link
+                                                key={lane.id}
+                                                href={`/lanes/${lane.slug}`}
+                                                className="bg-white border border-slate-100 rounded-[2rem] p-8 group hover:border-blue-600 transition-all flex flex-col gap-4"
+                                            >
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 italic">{lane.category}</span>
+                                                    <Zap className="h-4 w-4 text-amber-400 fill-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                </div>
+                                                <h3 className="text-2xl font-black text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">{lane.title}</h3>
+                                                <p className="text-base font-medium text-slate-500 leading-relaxed line-clamp-2 italic">{lane.content}</p>
+                                                <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-widest pt-4">
+                                                    Read insight <ChevronRight className="h-4 w-4" />
+                                                </div>
+                                            </Link>
                                         ))}
                                     </div>
                                 </section>

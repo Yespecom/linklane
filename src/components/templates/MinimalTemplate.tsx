@@ -216,7 +216,7 @@ export default function MinimalTemplate({ profile, services, products, links, re
                                             >
                                                 <div className="flex flex-col lg:flex-row lg:items-baseline justify-between gap-6 mb-8">
                                                     <h3 className="font-black text-4xl lg:text-5xl tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">{service.title}</h3>
-                                                    {service.price && <span className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400 opacity-60 group-hover:opacity-100 transition-opacity whitespace-nowrap">Invest {service.price}</span>}
+                                                    {service.price && <span className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400 opacity-60 group-hover:opacity-100 transition-opacity whitespace-nowrap">Invest ₹{service.price}</span>}
                                                 </div>
                                                 <p className="text-lg font-medium text-slate-500 mb-12 leading-relaxed max-w-2xl italic opacity-80">&quot;{service.description}&quot;</p>
                                                 <button
@@ -226,6 +226,35 @@ export default function MinimalTemplate({ profile, services, products, links, re
                                                     Inquire Now <ChevronRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                                                 </button>
                                             </motion.div>
+                                        ))}
+                                    </div>
+                                </section>
+                            )}
+
+                            {/* Minimal Lanes */}
+                            {(arguments[0] as any).userLanes?.length > 0 && (
+                                <section id="lanes">
+                                    <div className="flex items-center gap-3 mb-16 px-1">
+                                        <div className="h-1.5 w-10 rounded-full" style={{ backgroundColor: accentColor }} />
+                                        <h2 className="text-sm font-black uppercase tracking-[0.3em] text-slate-900 pt-1">Lanes by {profile.display_name}</h2>
+                                    </div>
+                                    <div className="grid grid-cols-1 gap-12">
+                                        {(arguments[0] as any).userLanes.map((lane: any) => (
+                                            <Link
+                                                key={lane.id}
+                                                href={`/lanes/${lane.slug}`}
+                                                className="group border-b border-slate-50 pb-12 hover:border-indigo-200 transition-all flex flex-col gap-4"
+                                            >
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-200 group-hover:text-indigo-400 transition-colors uppercase">{lane.category}</span>
+                                                    <Zap className="h-4 w-4 text-indigo-100 group-hover:text-indigo-600 transition-colors" />
+                                                </div>
+                                                <h3 className="font-black text-3xl tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">{lane.title}</h3>
+                                                <p className="text-lg font-medium text-slate-500 leading-relaxed italic line-clamp-2 opacity-60 group-hover:opacity-100 transition-opacity">&quot;{lane.content}&quot;</p>
+                                                <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] text-slate-300 pt-2 group-hover:text-slate-900 transition-colors">
+                                                    Read More <ChevronRight className="h-3 w-3" />
+                                                </div>
+                                            </Link>
                                         ))}
                                     </div>
                                 </section>

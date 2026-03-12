@@ -22,12 +22,41 @@ import ReviewModal from "@/components/ReviewModal";
 import VerifiedBadge from "@/components/VerifiedBadge";
 import { createClient } from "@/utils/supabase/client";
 
-export default function LinklaneTemplate({ profile, services, products, links, reviews, username, otherLanes }: any) {
+export default function LinklaneTemplate({ profile, services, products, links, reviews: initialReviews, username }: any) {
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+    const [localReviews, setLocalReviews] = useState(initialReviews || []);
     const supabase = createClient();
+
+    const handleNewReview = (newReview: any) => {
+        setLocalReviews((prev: any) => [newReview, ...prev]);
+    };
 
     useEffect(() => {
         if (!profile?.id) return;
+
+        // Subscribing to Realtime reviews
+        const channel = supabase
+            .channel(`public:reviews:profile_id=eq.${profile.id}`)
+            .on(
+                'postgres_changes',
+                {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'reviews',
+                    filter: `profile_id=eq.${profile.id}`
+                },
+                (payload) => {
+                    if (payload.new.status === 'approved') {
+                        setLocalReviews((prev: any) => {
+                            // Avoid duplicates if added via optimistic UI
+                            if (prev.find((r: any) => r.id === payload.new.id || (r.comment === payload.new.comment && r.name === payload.new.name))) return prev;
+                            return [payload.new, ...prev];
+                        });
+                    }
+                }
+            )
+            .subscribe();
+
         const trackView = async () => {
             try {
                 let sessionKey = sessionStorage.getItem(`ll_session_${profile.id}_view`);
@@ -46,6 +75,10 @@ export default function LinklaneTemplate({ profile, services, products, links, r
             }
         };
         trackView();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, [profile?.id, supabase]);
 
     const trackClick = async (target: string, type: string = 'click') => {
@@ -67,8 +100,8 @@ export default function LinklaneTemplate({ profile, services, products, links, r
         }
     };
 
-    const averageRating = reviews?.length > 0
-        ? (reviews.reduce((acc: number, rev: any) => acc + rev.rating, 0) / reviews.length).toFixed(1)
+    const averageRating = localReviews?.length > 0
+        ? (localReviews.reduce((acc: number, rev: any) => acc + rev.rating, 0) / localReviews.length).toFixed(1)
         : null;
 
     const saveContact = () => {
@@ -166,7 +199,7 @@ END:VCARD`;
                         <div className="flex flex-col items-center gap-1">
                             {profile.title && (
                                 <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                                    {profile.title} {profile.company && `• ${profile.company}`}
+                                    {profile.title} {profile.company && `• ${profile.company}`} {profile.category && `• ${profile.category}`}
                                 </span>
                             )}
                             {profile.location && (
@@ -188,7 +221,7 @@ END:VCARD`;
                                         <Star className="h-3.5 w-3.5 fill-current" />
                                     </div>
                                     <span className="text-xs font-black text-slate-900">{averageRating}</span>
-                                    <span className="text-xs font-bold text-slate-300">({reviews.length} reviews)</span>
+                                    <span className="text-xs font-bold text-slate-300">({localReviews.length} reviews)</span>
                                 </div>
                                 <button
                                     onClick={() => { trackClick("Click Write Review Button", "click"); setIsReviewModalOpen(true) }}
@@ -303,7 +336,7 @@ END:VCARD`;
                                             </p>
                                         </div>
                                         <div className="px-3 py-1.5 bg-white border border-slate-100 rounded-xl shadow-sm shrink-0">
-                                            <span className="text-sm font-black text-slate-900">{service.price || "Quote"}</span>
+                                            <span className="text-sm font-black text-slate-900">{service.price ? `₹${service.price}` : "Quote"}</span>
                                         </div>
                                     </div>
                                     <button
@@ -349,7 +382,7 @@ END:VCARD`;
                                             <p className="text-xs font-medium text-slate-500 leading-relaxed line-clamp-2 italic opacity-80 group-hover:opacity-100 transition-opacity">{product.description}</p>
                                         </div>
                                         <div className="flex items-center justify-between pt-4 border-t border-slate-50">
-                                            <span className="text-2xl font-black text-slate-900 font-poppins">${product.price}</span>
+                                            <span className="text-2xl font-black text-slate-900 font-poppins">₹{product.price}</span>
                                             <a
                                                 href={product.buy_url}
                                                 target="_blank"
@@ -371,38 +404,6 @@ END:VCARD`;
                 )}
 
 
-
-                {/* 7. OTHER LANES SECTION */}
-                {otherLanes?.length > 0 && (
-                    <section className="space-y-4">
-                        <h2 className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-300 ml-1 font-poppins">Profiles</h2>
-                        <div className="grid grid-cols-1 gap-3">
-                            {otherLanes.map((lane: any) => (
-                                <Link
-                                    key={lane.id}
-                                    href={`/${lane.username}`}
-                                    onClick={() => trackClick(`Other Profile: ${lane.username}`, "click_profile")}
-                                    className="p-4 bg-white border border-slate-100 rounded-xl flex items-center justify-between group hover:border-slate-200 transition-all"
-                                >
-                                    <div className="flex items-center gap-4">
-                                        <div className="h-10 w-10 rounded-lg bg-slate-100 overflow-hidden relative flex items-center justify-center">
-                                            {lane.avatar_url ? (
-                                                <img src={lane.avatar_url} className="w-full h-full object-cover relative z-10" />
-                                            ) : (
-                                                <span className="text-[10px] font-black text-slate-300 relative z-10 uppercase">{lane.display_name?.charAt(0)}</span>
-                                            )}
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <span className="text-xs font-black text-slate-900 font-poppins">{lane.display_name}</span>
-                                            <span className="text-[8px] font-bold text-slate-300 uppercase tracking-widest">@{lane.username}</span>
-                                        </div>
-                                    </div>
-                                    <ArrowRight className="h-4 w-4 text-slate-200 group-hover:text-slate-400 group-hover:translate-x-0.5 transition-all" />
-                                </Link>
-                            ))}
-                        </div>
-                    </section>
-                )}
 
                 {/* 8. REVIEWS SECTION (LAST POSITION) */}
                 <section id="reviews" className="space-y-6 pt-6 border-t border-slate-100">
@@ -426,8 +427,13 @@ END:VCARD`;
                     </div>
 
                     <div className="space-y-4">
-                        {reviews.slice(0, 3).map((review: any) => (
-                            <div key={review.id} className="bg-white p-5 rounded-xl border border-slate-100 space-y-3 shadow-sm">
+                        {localReviews.slice(0, 5).map((review: any) => (
+                            <motion.div 
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                key={review.id} 
+                                className="bg-white p-5 rounded-xl border border-slate-100 space-y-3 shadow-sm"
+                            >
                                 <div className="flex gap-1">
                                     {[...Array(5)].map((_, i) => (
                                         <Star
@@ -446,7 +452,7 @@ END:VCARD`;
                                         <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">{review.company || "Guest"}</span>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
 
@@ -481,6 +487,7 @@ END:VCARD`;
                 onClose={() => setIsReviewModalOpen(false)}
                 profileId={profile.id}
                 isVerified={profile.is_verified}
+                onSuccess={handleNewReview}
             />
         </div>
     );

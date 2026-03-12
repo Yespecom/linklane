@@ -35,6 +35,29 @@ export default async function OverviewPage() {
         redirect("/dashboard/onboarding");
     }
 
+    // Fetch real counts
+    const { count: totalViews } = await supabase
+        .from("leads")
+        .select("*", { count: 'exact', head: true })
+        .eq("profile_id", profile.id)
+        .eq("type", "view");
+
+    const { count: leadsCaptured } = await supabase
+        .from("leads")
+        .select("*", { count: 'exact', head: true })
+        .eq("profile_id", profile.id)
+        .neq("type", "view");
+
+    // Simple growth calc: views today
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const { count: viewsToday } = await supabase
+        .from("leads")
+        .select("*", { count: 'exact', head: true })
+        .eq("profile_id", profile.id)
+        .eq("type", "view")
+        .gte("created_at", today.toISOString());
+
     return (
         <div className="flex flex-col min-h-screen">
             <header className="lg:sticky top-0 z-30 border-b border-slate-100 bg-white/80 p-4 backdrop-blur-xl lg:p-6 mb-8 rounded-3xl">
@@ -93,9 +116,9 @@ export default async function OverviewPage() {
                     {/* Quick Stats Grid */}
                     <div className="grid grid-cols-1 gap-4">
                         {[
-                            { label: "Total Views", value: "0", icon: MousePointer2, color: "text-blue-600", bg: "bg-blue-50" },
-                            { label: "Leads Captured", value: "0", icon: UserPlus, color: "text-emerald-600", bg: "bg-emerald-50" },
-                            { label: "Trust Score", value: "N/A", icon: TrendingUp, color: "text-purple-600", bg: "bg-purple-50" },
+                            { label: "Total Views", value: totalViews || 0, icon: MousePointer2, color: "text-blue-600", bg: "bg-blue-50" },
+                            { label: "Leads Captured", value: leadsCaptured || 0, icon: UserPlus, color: "text-emerald-600", bg: "bg-emerald-50" },
+                            { label: "Trust Score", value: profile.rating || "N/A", icon: TrendingUp, color: "text-purple-600", bg: "bg-purple-50" },
                         ].map((stat) => (
                             <div key={stat.label} className="bg-white rounded-[2rem] p-6 border border-slate-200 flex items-center justify-between hover:border-blue-100 transition-colors">
                                 <div className="flex items-center gap-4">
@@ -123,10 +146,24 @@ export default async function OverviewPage() {
                                 <h4 className="text-xl font-black text-slate-900">Audience Growth</h4>
                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Real-time performance metrics</p>
                             </div>
+                            <div className="px-4 py-2 bg-emerald-50 rounded-xl text-emerald-600 text-xs font-black">
+                                +{viewsToday || 0} today
+                            </div>
                         </div>
                         <div className="flex flex-col items-center justify-center py-20 bg-slate-50/50 rounded-[2.5rem] border border-dashed border-slate-200">
-                            <Users className="h-12 w-12 text-slate-200 mb-4" />
-                            <p className="text-sm font-black text-slate-300 uppercase tracking-widest italic">Aggregation data syncing...</p>
+                            {viewsToday && viewsToday > 0 ? (
+                                <div className="text-center">
+                                    <TrendingUp className="h-12 w-12 text-emerald-500 mx-auto mb-4" />
+                                    <p className="text-sm font-black text-slate-900 uppercase tracking-widest">Active growth detected</p>
+                                    <p className="text-xs text-slate-400 mt-2">You gained {viewsToday} new views in the last 24 hours.</p>
+                                </div>
+                            ) : (
+                                <>
+                                    <Users className="h-12 w-12 text-slate-200 mb-4" />
+                                    <p className="text-sm font-black text-slate-300 uppercase tracking-widest italic">Waiting for more data...</p>
+                                    <p className="text-xs text-slate-400 mt-2 px-6 text-center">Share your profile to start seeing real-time audience engagement.</p>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

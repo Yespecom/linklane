@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ArrowRight } from "lucide-react";
+import { Menu, X, ArrowRight, Zap } from "lucide-react";
+import Link from "next/link";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -17,10 +19,22 @@ export default function Navbar() {
     }, []);
 
     const navLinks = [
-        { name: "Features", href: "#features" },
-        { name: "Demo", href: "#demo" },
-        { name: "Pricing", href: "#pricing" },
+        { name: "Lanes", href: "/lanes" },
+        { name: "Features", href: "/#features" },
+        { name: "Demo", href: "/#demo" },
+        { name: "Pricing", href: "/#pricing" },
     ];
+
+    const supabase = createClient();
+    const [user, setUser] = useState<any>(null);
+
+    useEffect(() => {
+        const checkUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+        };
+        checkUser();
+    }, []);
 
     return (
         <header className="fixed top-0 z-[100] w-full px-6 py-4 transition-all duration-500">
@@ -63,17 +77,34 @@ export default function Navbar() {
 
                 {/* Desktop Actions */}
                 <div className="hidden md:flex items-center gap-4">
-                    <button className="text-sm font-bold text-slate-400 transition-colors hover:text-white">
-                        Login
-                    </button>
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-black text-slate-950 shadow-lg shadow-white/5 transition-all hover:bg-slate-100"
-                    >
-                        Claim Page
-                        <ArrowRight className="h-4 w-4" />
-                    </motion.button>
+                    {user ? (
+                        <Link href="/dashboard">
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-black text-slate-950 shadow-lg shadow-white/5 transition-all hover:bg-slate-100"
+                            >
+                                Dashboard
+                                <ArrowRight className="h-4 w-4" />
+                            </motion.button>
+                        </Link>
+                    ) : (
+                        <>
+                            <Link href="/login" className="text-sm font-bold text-slate-400 transition-colors hover:text-white">
+                                Login
+                            </Link>
+                            <Link href="/claim">
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-black text-slate-950 shadow-lg shadow-white/5 transition-all hover:bg-slate-100"
+                                >
+                                    Claim Page
+                                    <ArrowRight className="h-4 w-4" />
+                                </motion.button>
+                            </Link>
+                        </>
+                    )}
                 </div>
 
                 {/* Mobile Toggle */}
@@ -96,21 +127,44 @@ export default function Navbar() {
                     >
                         <div className="flex flex-col gap-6">
                             {navLinks.map((link) => (
-                                <a
+                                <Link
                                     key={link.name}
                                     href={link.href}
                                     onClick={() => setMobileMenuOpen(false)}
                                     className="text-2xl font-bold text-white transition-colors hover:text-primary"
                                 >
                                     {link.name}
-                                </a>
+                                </Link>
                             ))}
                             <div className="my-2 h-[1px] w-full bg-white/5" />
-                            <button className="text-left text-lg font-bold text-slate-400">Login</button>
-                            <button className="flex items-center justify-center gap-2 rounded-2xl bg-white py-4 text-lg font-black text-slate-950">
-                                Claim Page
-                                <ArrowRight className="h-5 w-5" />
-                            </button>
+                            {user ? (
+                                <Link
+                                    href="/dashboard"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="flex items-center justify-center gap-2 rounded-2xl bg-white py-4 text-lg font-black text-slate-950"
+                                >
+                                    Dashboard
+                                    <ArrowRight className="h-5 w-5" />
+                                </Link>
+                            ) : (
+                                <>
+                                    <Link
+                                        href="/login"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="text-left text-lg font-bold text-slate-400"
+                                    >
+                                        Login
+                                    </Link>
+                                    <Link
+                                        href="/claim"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="flex items-center justify-center gap-2 rounded-2xl bg-white py-4 text-lg font-black text-slate-950"
+                                    >
+                                        Claim Page
+                                        <ArrowRight className="h-5 w-5" />
+                                    </Link>
+                                </>
+                            )}
                         </div>
                     </motion.div>
                 )}

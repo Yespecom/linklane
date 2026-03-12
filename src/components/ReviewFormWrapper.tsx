@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Star, Loader2, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ReviewFormWrapper({ profileId }: { profileId: string }) {
     const supabase = createClient();
@@ -32,7 +33,7 @@ export default function ReviewFormWrapper({ profileId }: { profileId: string }) 
             if (error) throw error;
 
             // Send notification email via SMTP route
-            fetch("/api/reviews/notify", {
+            fetch("/api/notify-review", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ profileId, name, company, comment, rating })
@@ -48,78 +49,96 @@ export default function ReviewFormWrapper({ profileId }: { profileId: string }) 
 
     if (submitted) {
         return (
-            <div className="flex flex-col items-center justify-center py-6 text-center">
-                <div className="h-20 w-20 bg-green-50 rounded-full flex items-center justify-center mb-6">
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex flex-col items-center justify-center py-6 text-center"
+            >
+                <motion.div 
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: "spring", damping: 12, stiffness: 200 }}
+                    className="h-20 w-20 bg-green-50 rounded-full flex items-center justify-center mb-6"
+                >
                     <CheckCircle2 className="h-10 w-10 text-green-500" />
-                </div>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Thank You!</h3>
-                <p className="text-slate-500 font-medium">Your review has been successfully submitted and is now live.</p>
-            </div>
+                </motion.div>
+                <h3 className="text-3xl font-black text-slate-900 mb-2 font-poppins tracking-tight">Success!</h3>
+                <p className="text-slate-500 font-medium">Your recommendation has been shared. Thanks for the support!</p>
+            </motion.div>
         );
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="flex justify-center gap-1 mb-8">
-                {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                        key={star}
-                        type="button"
-                        onClick={() => setRating(star)}
-                        onMouseEnter={() => setHover(star)}
-                        onMouseLeave={() => setHover(0)}
-                        className="p-1 transition-transform active:scale-95"
-                    >
-                        <Star
-                            className={`h-10 w-10 transition-colors ${(hover || rating) >= star
-                                ? "fill-yellow-400 text-yellow-400"
-                                : "text-slate-200"
-                                }`}
-                        />
-                    </button>
-                ))}
+        <form onSubmit={handleSubmit} className="space-y-8 sm:space-y-10">
+            <div className="flex flex-col items-center gap-6">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Rate your experience</p>
+                <div className="flex justify-center gap-2 sm:gap-3">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <motion.button
+                            key={star}
+                            type="button"
+                            whileHover={{ scale: 1.2, rotate: 5 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => setRating(star)}
+                            onMouseEnter={() => setHover(star)}
+                            onMouseLeave={() => setHover(0)}
+                            className="p-1 transition-all duration-300"
+                        >
+                            <Star
+                                className={`h-10 w-10 sm:h-14 sm:w-14 transition-all duration-500 ${(hover || rating) >= star
+                                    ? "fill-blue-600 text-blue-600 drop-shadow-[0_0_15px_rgba(37,99,235,0.4)]"
+                                    : "text-slate-100"
+                                    }`}
+                            />
+                        </motion.button>
+                    ))}
+                </div>
             </div>
 
-            <div className="space-y-4">
-                <div className="space-y-2">
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Full Name</label>
-                    <input
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="w-full rounded-2xl border border-slate-100 bg-slate-50 px-5 py-4 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none"
-                        placeholder="e.g. Rahul K."
-                    />
+            <div className="space-y-6 sm:space-y-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                        <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-4">Your Name</label>
+                        <input
+                            required
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full rounded-[1.8rem] border border-slate-100 bg-slate-50/50 px-8 py-5 text-sm font-bold text-slate-900 focus:ring-8 focus:ring-blue-500/5 focus:bg-white focus:border-blue-200 transition-all outline-none"
+                            placeholder="John Doe"
+                        />
+                    </div>
+                    <div className="space-y-3">
+                        <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-4">Company (Optional)</label>
+                        <input
+                            value={company}
+                            onChange={(e) => setCompany(e.target.value)}
+                            className="w-full rounded-[1.8rem] border border-slate-100 bg-slate-50/50 px-8 py-5 text-sm font-bold text-slate-900 focus:ring-8 focus:ring-blue-500/5 focus:bg-white focus:border-blue-200 transition-all outline-none"
+                            placeholder="Acme Inc."
+                        />
+                    </div>
                 </div>
-                <div className="space-y-2">
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Company / Project (Optional)</label>
-                    <input
-                        value={company}
-                        onChange={(e) => setCompany(e.target.value)}
-                        className="w-full rounded-2xl border border-slate-100 bg-slate-50 px-5 py-4 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none"
-                        placeholder="e.g. Acme Studio"
-                    />
-                </div>
-                <div className="space-y-2">
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Your Feedback</label>
+                <div className="space-y-3">
+                    <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-4">Your Message</label>
                     <textarea
                         required
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
-                        rows={5}
-                        className="w-full rounded-3xl border border-slate-100 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none resize-none"
-                        placeholder="Write your experience here..."
+                        rows={6}
+                        className="w-full rounded-[2.5rem] border border-slate-100 bg-slate-50/50 px-8 py-7 text-sm font-medium text-slate-900 focus:ring-8 focus:ring-blue-500/5 focus:bg-white focus:border-blue-200 transition-all outline-none resize-none leading-relaxed"
+                        placeholder="Tell others about your experience..."
                     />
                 </div>
             </div>
 
-            <button
+            <motion.button
                 disabled={loading}
                 type="submit"
-                className="w-full rounded-[2rem] bg-slate-900 py-5 text-sm font-black text-white shadow-xl hover:bg-black transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full rounded-[2rem] sm:rounded-[2.8rem] bg-blue-600 py-6 sm:py-7 text-xs font-black uppercase tracking-[0.25em] text-white shadow-2xl shadow-blue-600/20 hover:bg-blue-700 transition-all disabled:opacity-50 flex items-center justify-center gap-4 mt-4"
             >
-                {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Submit Review"}
-            </button>
+                {loading ? <Loader2 className="h-6 w-6 animate-spin" /> : <>Send Recommendation <span className="opacity-40">→</span></>}
+            </motion.button>
         </form>
     );
 }

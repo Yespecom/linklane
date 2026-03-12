@@ -18,22 +18,22 @@ import {
     Image as ImageIcon,
     Circle,
     Square,
-    Layout,
     Moon,
     Globe,
     Zap,
     Heart,
     Cpu,
-    CheckCircle2,
     Search,
     Instagram,
     Music,
     Upload,
-    MoreHorizontal
+    MoreHorizontal,
+    Wand2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import LinklaneTemplate from "@/components/templates/LinklaneTemplate";
+import BrandIcon from "@/components/BrandIcon";
 
 export default function EditorPage() {
     const supabase = createClient();
@@ -46,6 +46,7 @@ export default function EditorPage() {
     const [activeTab, setActiveTab] = useState("profile");
     const [uploadingAvatar, setUploadingAvatar] = useState(false);
     const [uploadingBanner, setUploadingBanner] = useState(false);
+    const [generatingSEO, setGeneratingSEO] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -67,6 +68,45 @@ export default function EditorPage() {
         };
         fetchData();
     }, [supabase]);
+
+    const handleAutoSEO = async () => {
+        if (!profile) return;
+        
+        try {
+            setGeneratingSEO(true);
+            const res = await fetch("/api/generate-seo", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: profile.display_name,
+                    title: profile.title,
+                    category: profile.category,
+                    location: profile.location,
+                    bio: profile.bio,
+                    services: services.map(s => s.title)
+                })
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || "Failed to generate SEO");
+            }
+
+            const data = await res.json();
+            
+            setProfile({
+                ...profile,
+                seo_title: data.seo_title || profile.seo_title,
+                seo_description: data.seo_description || profile.seo_description,
+                custom_keywords: data.custom_keywords || profile.custom_keywords
+            });
+        } catch (error: any) {
+            console.error(error);
+            alert(`SEO Generation Failed: ${error.message}`);
+        } finally {
+            setGeneratingSEO(false);
+        }
+    };
 
     const handleSave = async () => {
         setSaving(true);
@@ -161,18 +201,11 @@ export default function EditorPage() {
     );
 
     const tabs = [
-        { id: "templates", label: "Templates", icon: Layout },
         { id: "profile", label: "Identity", icon: User },
         { id: "appearance", label: "Styling", icon: Palette },
         { id: "services", label: "Services", icon: Briefcase },
         { id: "links", label: "Links", icon: LinkIcon },
         { id: "seo", label: "SEO", icon: Search }
-    ];
-
-    const templates = [
-        { id: "professional", label: "Professional", desc: "Business & Consulting", icon: Briefcase, color: "text-blue-600", bg: "bg-blue-50" },
-        { id: "creator", label: "Creator", desc: "Influencers & Artists", icon: Zap, color: "text-rose-500", bg: "bg-rose-50" },
-        { id: "minimal", label: "Minimal", desc: "Clean & Simple", icon: Moon, color: "text-slate-900", bg: "bg-slate-100" }
     ];
 
     const accentThemes = [
@@ -289,72 +322,7 @@ export default function EditorPage() {
                                 </motion.div>
                             )}
 
-                            {activeTab === "templates" && (
-                                <motion.div key="templates" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="space-y-8">
-                                    <div className="flex flex-col gap-1 mb-8">
-                                        <h3 className="text-2xl font-black text-slate-900">Choose Layout</h3>
-                                        <p className="text-sm font-bold text-slate-400">Change the core persona of your public profile.</p>
-                                    </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                        {templates.map(tmp => (
-                                            <button key={tmp.id} onClick={() => setProfile({ ...profile, template_id: tmp.id })}
-                                                className={`flex flex-col rounded-[2.5rem] border-2 transition-all text-left group relative overflow-hidden p-3 ${profile.template_id === tmp.id ? "border-blue-600 bg-blue-50/50 shadow-2xl scale-[1.02]" : "border-slate-100 bg-slate-50 hover:border-slate-300"}`}>
 
-                                                {/* Visual Mockup Container */}
-                                                <div className="aspect-[4/5] rounded-[2rem] bg-white border border-slate-100 mb-6 overflow-hidden relative shadow-inner">
-                                                    {/* Template Mockup Rendering */}
-                                                    {tmp.id === 'professional' && (
-                                                        <div className="p-4 flex flex-col items-center gap-2">
-                                                            <div className="h-10 w-10 rounded-2xl bg-slate-100 mt-4" />
-                                                            <div className="h-2 w-16 bg-slate-200 rounded-full" />
-                                                            <div className="h-1.5 w-10 bg-slate-100 rounded-full mb-4" />
-                                                            <div className="w-full h-8 bg-blue-50 rounded-xl" />
-                                                            <div className="w-full h-12 bg-slate-50 rounded-2xl border border-slate-100" />
-                                                            <div className="w-full h-12 bg-slate-50 rounded-2xl border border-slate-100" />
-                                                        </div>
-                                                    )}
-                                                    {tmp.id === 'creator' && (
-                                                        <div className="flex flex-col items-center">
-                                                            <div className="h-16 w-full bg-slate-100" />
-                                                            <div className="h-12 w-12 rounded-full bg-white p-1 -mt-6 shadow-md">
-                                                                <div className="h-full w-full rounded-full bg-slate-200" />
-                                                            </div>
-                                                            <div className="h-2 w-20 bg-slate-200 rounded-full mt-4 mb-4" />
-                                                            <div className="w-[85%] h-8 bg-rose-500 rounded-2xl mb-2" />
-                                                            <div className="w-[85%] h-8 bg-rose-500 rounded-2xl" />
-                                                        </div>
-                                                    )}
-                                                    {tmp.id === 'minimal' && (
-                                                        <div className="p-6 flex flex-col items-start gap-3">
-                                                            <div className="h-4 w-24 bg-slate-900 rounded-sm" />
-                                                            <div className="h-1.5 w-16 bg-slate-200 rounded-full mb-4" />
-                                                            <div className="w-full h-px bg-slate-100" />
-                                                            <div className="w-full h-4 bg-slate-50 rounded-sm" />
-                                                            <div className="w-full h-px bg-slate-100" />
-                                                            <div className="w-full h-4 bg-slate-50 rounded-sm" />
-                                                            <div className="w-full h-px bg-slate-100" />
-                                                        </div>
-                                                    )}
-
-                                                    {/* Selection Overlay */}
-                                                    {profile.template_id === tmp.id && (
-                                                        <div className="absolute inset-0 bg-blue-600/5 flex items-center justify-center backdrop-blur-[1px]">
-                                                            <div className="bg-blue-600 text-white rounded-full p-2 shadow-xl">
-                                                                <CheckCircle2 className="h-6 w-6" />
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-
-                                                <div className="px-5 pb-5">
-                                                    <p className="font-black text-slate-900 uppercase tracking-tighter text-xl">{tmp.label}</p>
-                                                    <p className="text-[10px] font-bold text-slate-400 mt-1 leading-relaxed uppercase tracking-widest">{tmp.desc}</p>
-                                                </div>
-                                            </button>
-                                        ))}
-                                    </div>
-                                </motion.div>
-                            )}
 
                             {activeTab === "appearance" && (
                                 <motion.div key="appearance" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="space-y-12">
@@ -449,13 +417,16 @@ export default function EditorPage() {
 
                             {/* ... Services, Products, Links stay largely the same but stylized */}
                             {activeTab === "services" && <motion.div key="services" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-                                <div className="flex justify-between items-center"><h3 className="text-xl font-black text-slate-900">Services</h3><button onClick={() => setServices([...services, { title: "New Service", price: "$99" }])} className="text-blue-600 font-black text-[10px] uppercase tracking-widest">+ Add</button></div>
+                                <div className="flex justify-between items-center"><h3 className="text-xl font-black text-slate-900">Services</h3><button onClick={() => setServices([...services, { title: "New Service", price: "499" }])} className="text-blue-600 font-black text-[10px] uppercase tracking-widest">+ Add</button></div>
                                 {services.map((s, idx) => (
                                     <div key={idx} className="p-6 rounded-2xl bg-slate-50 border border-slate-100 relative group">
                                         <button onClick={() => setServices(services.filter((_, i) => i !== idx))} className="absolute top-4 right-4 text-slate-300 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
                                         <div className="grid grid-cols-2 gap-4 mb-4">
                                             <input value={s.title} onChange={(e) => { const n = [...services]; n[idx].title = e.target.value; setServices(n); }} className="px-4 py-3 bg-white border border-slate-100 rounded-xl text-sm font-bold" placeholder="Service Name" />
-                                            <input value={s.price} onChange={(e) => { const n = [...services]; n[idx].price = e.target.value; setServices(n); }} className="px-4 py-3 bg-white border border-slate-100 rounded-xl text-sm font-bold" placeholder="Price" />
+                                            <div className="relative">
+                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₹</span>
+                                                <input value={s.price} onChange={(e) => { const n = [...services]; n[idx].price = e.target.value; setServices(n); }} className="w-full pl-8 pr-4 py-3 bg-white border border-slate-100 rounded-xl text-sm font-bold" placeholder="Price" />
+                                            </div>
                                         </div>
                                         <textarea value={s.description} onChange={(e) => { const n = [...services]; n[idx].description = e.target.value; setServices(n); }} className="w-full px-4 py-3 bg-white border border-slate-100 rounded-xl text-sm font-medium h-20 resize-none" placeholder="Description..." />
                                     </div>
@@ -481,7 +452,7 @@ export default function EditorPage() {
                                                     {l.icon_url ? (
                                                         <img src={l.icon_url} className="w-full h-full object-cover" />
                                                     ) : (
-                                                        <LinkIcon className="h-5 w-5 text-slate-300" />
+                                                        <BrandIcon url={l.url} className="h-5 w-5" />
                                                     )}
                                                     <label className="absolute inset-0 bg-slate-900/60 flex items-center justify-center opacity-0 group-hover/icon:opacity-100 cursor-pointer transition-all">
                                                         <Upload className="h-4 w-4 text-white" />
@@ -515,10 +486,15 @@ export default function EditorPage() {
                                                         {[
                                                             { name: "WhatsApp", url: "https://wa.me/..." },
                                                             { name: "Instagram", url: "https://instagram.com/..." },
+                                                            { name: "LinkedIn", url: "https://linkedin.com/..." },
+                                                            { name: "YouTube", url: "https://youtube.com/..." },
                                                             { name: "TikTok", url: "https://tiktok.com/@..." },
                                                             { name: "Spotify", url: "https://open.spotify.com/..." },
-                                                            { name: "Apple", url: "https://music.apple.com/..." },
-                                                            { name: "X", url: "https://x.com/..." }
+                                                            { name: "Apple M.", url: "https://music.apple.com/..." },
+                                                            { name: "X", url: "https://x.com/..." },
+                                                            { name: "GitHub", url: "https://github.com/..." },
+                                                            { name: "Facebook", url: "https://facebook.com/..." },
+                                                            { name: "Website", url: "https://" }
                                                         ].map(preset => (
                                                             <button
                                                                 key={preset.name}
@@ -544,9 +520,19 @@ export default function EditorPage() {
                             </motion.div>}
                             {activeTab === "seo" && (
                                 <motion.div key="seo" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="space-y-12">
-                                    <div className="flex flex-col gap-1">
-                                        <h3 className="text-2xl font-black text-slate-900">SEO Suite</h3>
-                                        <p className="text-sm font-bold text-slate-400">Optimize how you appear in Google and social search results.</p>
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                        <div className="flex flex-col gap-1">
+                                            <h3 className="text-2xl font-black text-slate-900">SEO Suite</h3>
+                                            <p className="text-sm font-bold text-slate-400">Optimize how you appear in Google and social search results.</p>
+                                        </div>
+                                        <button 
+                                            onClick={handleAutoSEO}
+                                            disabled={generatingSEO}
+                                            className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-50 px-4 py-2.5 text-xs font-black text-blue-600 hover:bg-blue-100 hover:scale-105 active:scale-95 transition-all w-fit disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            {generatingSEO ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
+                                            {generatingSEO ? 'Generating...' : 'Auto-Generate'}
+                                        </button>
                                     </div>
 
                                     <div className="space-y-8">

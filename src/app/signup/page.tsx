@@ -37,7 +37,7 @@ function SignupContent() {
             email,
             password,
             options: {
-                emailRedirectTo: `${window.location.origin}/auth/callback`,
+                emailRedirectTo: `${window.location.origin}/auth/callback?next=/verified`,
                 data: {
                     username: username || null,
                     display_name: displayName,

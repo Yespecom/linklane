@@ -89,13 +89,7 @@ export default function ClaimPage() {
             </main>
 
             {/* Footer Minimal */}
-            <footer className="mx-auto max-w-7xl px-8 py-12 flex justify-between items-center opacity-40">
-                <span className="text-[10px] font-black uppercase tracking-widest">Linklane — Reserved 2024</span>
-                <div className="flex gap-6">
-                    <span className="text-[10px] font-black uppercase tracking-widest cursor-pointer hover:text-black transition-colors">Privacy</span>
-                    <span className="text-[10px] font-black uppercase tracking-widest cursor-pointer hover:text-black transition-colors">Terms</span>
-                </div>
-            </footer>
+        
         </div>
     );
 }

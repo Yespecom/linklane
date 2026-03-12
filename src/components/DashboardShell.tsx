@@ -1,15 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DashboardSidebar from "@/components/DashboardSidebar";
-import { Menu, Search, Bell, User } from "lucide-react";
+import { Menu, Search, Bell, User, Loader2 } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
+import Link from "next/link";
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [profile, setProfile] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const supabase = createClient();
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                const { data } = await supabase
+                    .from("profiles")
+                    .select("*")
+                    .eq("id", user.id)
+                    .single();
+                setProfile(data);
+            }
+            setLoading(false);
+        };
+        fetchProfile();
+    }, [supabase]);
 
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 font-medium">
-            <DashboardSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+            <DashboardSidebar 
+                isOpen={isSidebarOpen} 
+                onClose={() => setIsSidebarOpen(false)} 
+                username={profile?.username}
+            />
 
             {/* Main Content Area */}
             <div className={`transition-all duration-500 ${isSidebarOpen ? "lg:pl-72" : "lg:pl-72"}`}>
@@ -35,9 +60,13 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                         <button className="h-10 w-10 rounded-xl hover:bg-slate-50 flex items-center justify-center text-slate-500 hover:text-blue-600 transition-all">
                             <Bell className="h-5 w-5" />
                         </button>
-                        <button className="h-10 w-10 rounded-xl hover:bg-slate-50 flex items-center justify-center text-slate-500 hover:text-blue-600 transition-all text-slate-400">
-                            <User className="h-5 w-5" />
-                        </button>
+                        <Link href="/dashboard/settings" className="h-10 w-10 rounded-xl hover:bg-slate-50 flex items-center justify-center text-slate-500 hover:text-blue-600 transition-all overflow-hidden border border-slate-100">
+                            {profile?.avatar_url ? (
+                                <img src={profile.avatar_url} className="w-full h-full object-cover" alt="Avatar" />
+                            ) : (
+                                <User className="h-5 w-5" />
+                            )}
+                        </Link>
                     </div>
                 </header>
 
