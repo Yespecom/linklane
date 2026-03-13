@@ -20,6 +20,7 @@
     @apply antialiased;
     background-color: #FFFFFF;
     color: #000000;
+    font-weight: 300;
   }
 
   ::selection {

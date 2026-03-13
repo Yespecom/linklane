@@ -94,7 +94,7 @@ export default function ReviewRequestPage({ params }: { params: Promise<{ userna
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.5 }}
-                            className="text-sm sm:text-base font-medium text-slate-400 max-w-md mx-auto leading-relaxed"
+                            className="text-sm sm:text-base font-normal text-slate-400 max-w-md mx-auto leading-relaxed"
                         >
                             Help {profile.display_name.split(' ')[0]} grow their professional presence by sharing your experience working together.
                         </motion.p>
@@ -121,12 +121,12 @@ export default function ReviewRequestPage({ params }: { params: Promise<{ userna
                         {/* Decorative background circle */}
                         <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
                         
-                        <h2 className="text-xl font-black text-white mb-2 relative z-10">Want your own?</h2>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8 relative z-10">Create your digital hub in seconds</p>
+                        <h2 className="text-xl font-bold text-white mb-2 relative z-10">Want your own?</h2>
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-8 relative z-10">Create your digital hub in seconds</p>
                         
                         <Link 
                             href="/claim" 
-                            className="w-full inline-flex items-center justify-center gap-3 bg-white text-slate-900 py-4.5 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all active:scale-95 group/btn"
+                            className="w-full inline-flex items-center justify-center gap-3 bg-white text-slate-900 py-4.5 rounded-2xl text-[11px] font-bold uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all active:scale-95 group/btn"
                         >
                             Get Started Free
                             <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />

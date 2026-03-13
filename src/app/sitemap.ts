@@ -1,3 +1,4 @@
+// Linklane.in Sitemap - Professional Hub
 import { MetadataRoute } from 'next';
 import { createClient } from "@/utils/supabase/server";
 
@@ -17,13 +18,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: profile.updated_at || new Date().toISOString(),
         changeFrequency: 'weekly' as const,
         priority: 0.8,
-    }));
-
-    const reviewUrls = (profiles || []).map((profile) => ({
-        url: `${baseUrl}/${profile.username}/review`,
-        lastModified: profile.updated_at || new Date().toISOString(),
-        changeFrequency: 'monthly' as const,
-        priority: 0.5,
     }));
 
     return [
@@ -46,6 +40,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.9,
         },
         ...profileUrls,
-        ...reviewUrls,
     ];
 }

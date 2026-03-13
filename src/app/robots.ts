@@ -1,3 +1,4 @@
+// Linklane.in - Professional Hub
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {

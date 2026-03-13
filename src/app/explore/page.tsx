@@ -130,13 +130,13 @@ export default function ExplorePage() {
                     </div>
                     <div>
                         <div className="flex items-center gap-2 mb-1">
-                            <h3 className={`${compact ? 'text-lg' : 'text-2xl'} font-black text-slate-900 leading-tight line-clamp-1`}>{p.display_name}</h3>
+                            <h3 className={`${compact ? 'text-lg' : 'text-2xl'} font-bold text-slate-900 leading-tight line-clamp-1`}>{p.display_name}</h3>
                             {p.is_verified && <VerifiedBadge size={compact ? "sm" : "md"} />}
                         </div>
                         <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full">{p.category || "General"}</span>
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full">{p.category || "General"}</span>
                             {p.location && (
-                                <div className="flex items-center gap-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                <div className="flex items-center gap-1 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
                                     <MapPin className="h-3 w-3" /> {p.location}
                                 </div>
                             )}
@@ -146,7 +146,7 @@ export default function ExplorePage() {
             </div>
 
             {!compact && (
-                <p className="text-sm font-medium text-slate-500 mb-8 line-clamp-2 leading-relaxed h-10">
+                <p className="text-sm font-normal text-slate-500 mb-8 line-clamp-2 leading-relaxed h-10">
                     {p.bio || "No description provided."}
                 </p>
             )}
@@ -158,8 +158,8 @@ export default function ExplorePage() {
                             <Star key={s} className={`h-3 w-3 ${s <= Math.round(p.rating || 0) ? "fill-yellow-400 text-yellow-400" : "text-slate-100"}`} />
                         ))}
                     </div>
-                    <span className="text-xs font-black text-slate-900">{p.rating || 0}</span>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">({p.review_count || 0})</span>
+                    <span className="text-xs font-bold text-slate-900">{p.rating || 0}</span>
+                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">({p.review_count || 0})</span>
                 </div>
                 <div className={`${compact ? 'h-8 w-8' : 'h-10 w-10'} rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all`}>
                     <ChevronRight className={`${compact ? 'h-4 w-4' : 'h-5 w-5'}`} />
@@ -178,7 +178,7 @@ export default function ExplorePage() {
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="text-5xl md:text-7xl font-black tracking-tight text-center mb-10 max-w-3xl leading-[1.1]"
+                        className="text-5xl md:text-7xl font-bold tracking-tight text-center mb-10 max-w-3xl leading-[1.1]"
                     >
                         Find Experts.<br />
                         <span className="text-blue-600">Grow Your Network.</span>
@@ -192,7 +192,7 @@ export default function ExplorePage() {
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Search by name, category or service..."
-                            className="w-full pl-16 pr-6 py-6 rounded-[2.5rem] border border-slate-200 bg-white shadow-2xl shadow-blue-500/5 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none font-bold text-lg"
+                            className="w-full pl-16 pr-6 py-6 rounded-[2.5rem] border border-slate-200 bg-white shadow-2xl shadow-blue-500/5 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none font-semibold text-lg"
                         />
 
                         {/* Google-style Live Results Dropdown */}

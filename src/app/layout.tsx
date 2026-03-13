@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://linklane.in'),
   title: "Linklane | Your links deserve their own lane",
   description: "Create a beautiful page for your links, content, and leads. Share one link everywhere.",
+  icons: {
+    icon: '/icon',
+    apple: '/apple-icon',
+  },
 };
 
 export default function RootLayout({

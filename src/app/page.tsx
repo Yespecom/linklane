@@ -107,7 +107,7 @@ export default function Home() {
             className="flex flex-col items-center gap-10 md:gap-12 max-w-5xl"
           >
             <div className="space-y-4 md:space-y-8">
-              <h1 className="text-[2.75rem] sm:text-[6rem] md:text-[8rem] lg:text-[9.5rem] leading-[1.1] md:leading-[0.8] font-[1000] tracking-[-0.06em] text-slate-950 px-2">
+              <h1 className="text-[2.75rem] sm:text-[6rem] md:text-[8rem] lg:text-[9.5rem] leading-[1.1] md:leading-[0.8] font-bold tracking-[-0.06em] text-slate-950 px-2">
                 Claim your <br />
                 <span className="relative inline-block text-blue-600 md:text-slate-950">
                   linklane
@@ -121,7 +121,7 @@ export default function Home() {
               </h1>
             </div>
 
-            <p className="text-sm sm:text-2xl font-bold leading-relaxed max-w-2xl text-slate-500/80 px-8 md:px-0">
+            <p className="text-sm sm:text-2xl font-semibold leading-relaxed max-w-2xl text-slate-500/80 px-8 md:px-0">
               The universal platform to own your digital footprint.
               <br className="hidden md:block" />
               Designed for performance, built for trust.
@@ -379,11 +379,11 @@ export default function Home() {
             <div className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_12px_#fff] animate-pulse" />
           </div>
           <div className="flex flex-col -gap-1">
-            <span className="text-xl font-black tracking-tighter text-slate-900 leading-tight">Linklane</span>
-            <span className="text-[7px] font-black uppercase tracking-[0.3em] text-blue-600/60 leading-none pl-0.5">Professional Hub</span>
+            <span className="text-xl font-bold tracking-tighter text-slate-900 leading-tight">Linklane</span>
+            <span className="text-[7px] font-bold uppercase tracking-[0.3em] text-blue-600/60 leading-none pl-0.5">Professional Hub</span>
           </div>
         </Link>
-        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">powered by yesp corporation</p>
+        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">powered by yesp corporation</p>
       </footer>
 
       <style jsx global>{`
