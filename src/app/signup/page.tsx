@@ -37,7 +37,7 @@ function SignupContent() {
             email,
             password,
             options: {
-                emailRedirectTo: `${window.location.origin}/auth/callback?next=/verified`,
+                emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
                 data: {
                     username: username || null,
                     display_name: displayName,
@@ -88,17 +88,22 @@ function SignupContent() {
                 <div className="bg-white rounded-3xl p-8 sm:p-10 shadow-2xl shadow-slate-200 border border-slate-100">
                     {success ? (
                         <div className="text-center py-6">
-                            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-green-50 mb-6 border border-green-100">
-                                <CheckCircle2 className="h-10 w-10 text-green-600" />
+                            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-blue-50 mb-6 border border-blue-100">
+                                <CheckCircle2 className="h-10 w-10 text-blue-600" />
                             </div>
-                            <h1 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">Check your email</h1>
+                            <h1 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">Confirm your email</h1>
                             <p className="text-slate-500 font-medium mb-8 leading-relaxed">
-                                We've sent a confirmation link to <span className="text-slate-900 font-black">{email}</span>.
-                                Please click it to activate your account and claim <span className="text-blue-600 font-black">linklane.in/{username}</span>.
+                                We've sent a magic link to <span className="text-slate-900 font-black">{email}</span>.
+                                <br />Please check your inbox (and spam) to activate your account.
                             </p>
-                            <Link href="/login" className="inline-flex items-center justify-center w-full bg-blue-600 text-white rounded-2xl py-4 text-sm font-black shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all">
-                                Go to Login
-                            </Link>
+                            <div className="space-y-4">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                    Link will expire in 24 hours
+                                </p>
+                                <Link href="/" className="inline-flex items-center justify-center w-full bg-slate-900 text-white rounded-2xl py-4 text-sm font-black shadow-lg transition-all hover:bg-black">
+                                    Return to Home
+                                </Link>
+                            </div>
                         </div>
                     ) : (
                         <>
